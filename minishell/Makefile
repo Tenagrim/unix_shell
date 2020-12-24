@@ -5,12 +5,12 @@ PRINTF = libftprintf.a
 MLX = mlx/libmlx.a
 SRC_DIR = src/
 OBJ_DIR = src/
-SRC_FILES = $(shell ls -1 src | grep .c)
+SRC_FILES = $(shell ls -1 src | grep "\.c")
 INC=/usr/include
 INCLIB=$(INC)/../lib
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ_FILES = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
-FLAGS = -Wall -Wextra -Werror  -Iincludes/ -O2
+FLAGS = -Wall -Wextra -Werror  -Iincludes/ -O0
 CC= gcc $(FLAGS)
 
 all :  $(NAME)
@@ -20,10 +20,10 @@ $(PRINTF) : ft_printf/libftprintf.a
 	cp ft_printf/libftprintf.a .
 
 %.o: %.c $(HEADER)
-	echo $(SRC_FILES)
 	$(CC) -c $< -o $@
 
 $(NAME) :  $(PRINTF) $(OBJ_FILES) $(HEADER)
+	echo $(SRC_FILES)
 	$(CC) -o $(NAME) $(OBJ_FILES) $(PRINTF)
 
 clean :
@@ -36,6 +36,4 @@ fclean : clean
 	rm -f $(PRINTF)
 
 re : fclean all
-
-
 
