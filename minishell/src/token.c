@@ -42,6 +42,12 @@ typedef struct	s_tokenizer
 
 
 
+void	tkz_buf_init(t_tkz_buf *buf)
+{
+	buf->fd = STDIN_FILENO;
+	buf->start = 0;
+	buf->len = 0;
+}
 
 t_tkz	*tkz_init(void)
 {
@@ -52,6 +58,7 @@ t_tkz	*tkz_init(void)
 	tkz->tkn = malloc(sizeof(t_token) * tkz->tkz_cap);
 	tkz->tkn_len = 0;
 	tkz->state = 0;
+	tkz_buf_init(&tkz->buf);
 }
 
 void	tkz_free(t_tkz **tkz)
@@ -68,6 +75,18 @@ int		tkz_error(t_tkz *tkz)
 	return (TKZ_ERROR);
 }
 
+void	tkz_memcpy(void *l, void *r, int size)
+{
+	int i;
+
+	i = 0;
+	while (i < size)
+	{
+		((unsigned char *)l)[i] = ((unsigned char *)r)[i];
+		i += 1;
+	}
+}
+
 int		tkz_expand_tokens_array(t_tkz *tkz)
 {
 	int		new_cap;
@@ -82,12 +101,7 @@ int		tkz_expand_tokens_array(t_tkz *tkz)
 		return (TKZ_ERROR);
 	if (tkz->tkn)
 	{
-		i = 0;
-		while (i < tkz->tkn_count)
-		{
-			new_ptr[i] = tkz->tkn[i];
-			i += 1;
-		}
+		tkz_memcpy(new_ptr, tkz->tkn, tkz->tkn_count * sizeof(t_token));
 		free(tkz->tkn);
 	}
 	tkz->tkn = new_ptr;
@@ -102,18 +116,6 @@ int		tkz_check_token_end_condition(t_tkz *tkz, t_token *tkn)
 	if (tkn->len > 0 && tkn->str[tkn->len - 1] == '\n')
 		return (1);
 	return (0);
-}
-
-void	tkz_memcpy(void *l, void *r, int size)
-{
-	int i;
-
-	i = 0;
-	while (i < size)
-	{
-		((char *)l)[i] = ((char *)r)[i];
-		i += 1;
-	}
 }
 
 int		tkz_read_buffer(t_tkz_buf *buf)
