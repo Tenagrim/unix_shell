@@ -6,44 +6,26 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 13:32:37 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 15:43:34 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	shell_loop()
+#define C_LFT_RDR	(1 << 0)
+#define C_RT_RDR	(1 << 1)
+#define C_RTT_RDR	(1 << 2)
+
+typedef struct
 {
-	
+	unsigned int	flags;
+	char			filenames[2];
+	char			**argv;
+	char			**env;
+	int				fds[2];
+}					t_cmd_args;
 
-}
-
-
-int		exec_command(char **av, char **env)
-{
-	int	pid;
-	int	status;
-	int	ret;
-
-	ret = 0;
-	pid = fork();
-	if (!pid)
-	{
-		//ft_printf(">>> %s\n", av[0]);
-		ret = execve(av[0], av, env);
-		ft_printf("execve returned: %d\n", ret);
-		exit(ret);
-	}
-	else
-	{
-		//ft_printf("start wait\n");
-		wait(&status);
-		//ft_printf("end wait\n");
-	}
-	return (ret);
-}
-
-char	**argv_gen(char *command, char *av_1)
+char	**argv0_gen(char *command, char *av_1)
 {
 	char **res;
 	res = malloc(sizeof(char*) * 3);
@@ -53,6 +35,18 @@ char	**argv_gen(char *command, char *av_1)
 	res[0] = ft_strdup(command);
 	return (res);
 }
+
+char	**argv1_gen(char *command, char *av_1)
+{
+	char **res;
+	res = malloc(sizeof(char*) * 3);
+	res[2] = NULL;
+	res[1] = NULL;
+	res[1] = ft_strdup(av_1);
+	res[0] = ft_strdup(command);
+	return (res);
+}
+
 
 int		exec_piped_commands(char **av1, char **av2, char **env)
 {
@@ -69,6 +63,7 @@ int		exec_piped_commands(char **av1, char **av2, char **env)
 	}
 	else if (pid == 0)
 	{
+		
 		close(fds[1]);
         dup2(fds[0], 0);
 		ret = execve(av2[0], av2, env);
@@ -78,8 +73,6 @@ int		exec_piped_commands(char **av1, char **av2, char **env)
 	else
 	{
 		close(fds[0]);
-		int file = open("testfile_3", O_RDWR | O_CREAT, 0644);
-		dup2(file, fds[1]);
         dup2(fds[1], 1);
 		ret = execve(av1[0], av1, env);
 		ft_printf("execve returned: %d\n", ret);
@@ -106,31 +99,30 @@ void	red_in(int *fds)
 
 
 
+char	*get_path_with_env(char **env, char *name)
+{
+	return(find_path(get_env_value(env, "PATH"), name));
+}
+
 int		main(int ac, char **av, char **env)
 {
+	int fd1;
+	int	fd2;
+	t_cmd_args args;
+
 	int	fds[2];
 
-	//exec_piped_commands(argv_gen("/bin/cat", "testfile"), argv_gen("/usr/bin/grep", "1111"), env);
-	//pipe(fds);
-	//red_out(fds);
-	//exec_command(argv_gen("/bin/echo", "hello world\n"), env, 0, fds[1], fds);
-	//red_in(fds);
-	//exec_command(argv_gen("/bin/cat", "-e"), env, fds[0], 1, fds);
+	//fd1 = open("file", O_WRONLY | O_CREAT, 0644);
+	fd1 = open("file", O_RDONLY);
+	fd2 = open("file_out", O_WRONLY | O_CREAT, 0644);
 
 
-	//int file1 = open("testfile_3", O_RDWR | O_CREAT, 0644);
-	//ft_printf("[%d]\n", find_file_in_dir("/Users/gshona/.brew/bin/", "ls"));
-	//ft_printf("path: |%s|\n", find_path(get_env_value(env, "PATH"), "ls"));
+	pipe(fds);
+	exec_redirected(argv1_gen(get_path_with_env(env, "ls"), "."), 0, fds[1], env);
+	exec_redirected(argv1_gen(get_path_with_env(env, "grep"), "l"), fds[0], 1, env);
+	//ft_printf("[%d]\t[%d]\n", fd1, fd2);
+	//exec_redirected(argv1_gen(get_path_with_env(env, "cat"), "-e"), fd1, fd2, env);
 	
-	//ft_printf("|%s|\n", get_full_path("/usr/bin", "cat"));
-	
-	char	*prog;
-	char	*path = get_env_value(env, "PATH");
-	prog = find_path(path, av[1]);
 
-	ft_printf("[%s]\n", prog);
-
-	exec_command(argv_gen(prog, NULL), env);	
-
-	//ft_printf("END\n");
+	ft_printf("END\n");
 }

@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:31:24 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 13:23:10 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 14:56:05 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int		find_file_in_dir(char *dir_name, char *file);
 ** return must be freed
 */
 char	*find_path(char *path, char *name);
+int		exec_redirected(char **av, int fd_in, int fd_out, char **env);
+int		exec_command(char **av, char **env);
 char	**copy_env(char **env);
 void	free_nullterm_char_arr(char ***arr);
 void	print_env(char **env);
