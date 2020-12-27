@@ -34,6 +34,7 @@ void	tkz_free(t_tkz **tkz)
 
 	if ((*tkz)->tkn)
 	{
+		tkz_free_tokens(*tkz);
 		free((*tkz)->tkn);
 	}
 	if (*tkz)
@@ -376,6 +377,7 @@ int		tkz_subprocessor_env(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_DOLLAR_SYMBOL);
 	tkz_buffer_increment(buf, 1);
 	tkz_init_token(&name);
+	error = TKZ_SUCCESS;
 	while (!tkz_is_error(error) &&
 		!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
 	{
@@ -649,6 +651,16 @@ int		tkz_make_token(t_tkz *tkz, int i_tkn, int *remains)
 	return (error);
 }
 
+void	tkz_remove_last_empty_tokens(t_tkz *tkz)
+{
+	while (tkz->tkn_count - 1 >= 0 && tkz->tkn[tkz->tkn_count - 1].len <= 0)
+	{
+		if (tkz->tkn[tkz->tkn_count - 1].mem)
+			free(tkz->tkn[tkz->tkn_count - 1].mem);
+		tkz->tkn_count -= 1;
+	}
+}
+
 int		tkz_make(t_tkz *tkz)
 {
 	int		remains;
@@ -665,6 +677,7 @@ int		tkz_make(t_tkz *tkz)
 	}
 	if (!tkz_is_error(error))
 		tkz_buffer_skip_endcommand(&tkz->buf);
+	tkz_remove_last_empty_tokens(tkz);
 	return (error);
 }
 
