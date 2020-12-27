@@ -6,10 +6,16 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/27 22:25:41 by jsandsla         ###   ########.fr       */
+/*   Updated: 2020/12/27 22:32:32 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-ogram
+
+#ifndef SEMANTIC_H
+# define SEMANTIC_H
+
+# include "token.h"
+
+typedef struct	t_program
 {
 	char		**arguments;
 	char		*redirect_filename[2];

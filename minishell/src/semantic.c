@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:19 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/27 22:20:24 by jsandsla         ###   ########.fr       */
+/*   Updated: 2020/12/27 22:34:25 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	init_super_program(t_program *pr)
 	pr->redirect_filename[1] = 0;
 	pr->flags = 0;
 	pr->fd[0] = 0;
-	pr->fd[1] = 0;
+	pr->fd[1] = 1;
 }
 
 int		is_super_error(int error)

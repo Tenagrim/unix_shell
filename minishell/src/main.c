@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 21:33:18 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 22:29:46 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int		exec_piped_commands(char **av1, char **av2, char **env)
 	}
 	else if (pid == 0)
 	{
-		
+
 		close(fds[1]);
         dup2(fds[0], 0);
 		ret = execve(av2[0], av2, env);
@@ -112,7 +112,7 @@ int		exec_commands(t_super *progs)
 	cur_pipe = 0;
 	i = 0;
 	while (i < progs->count)
-	{	
+	{
 		prog = progs->programs + i;
 		cur_pipe = !cur_pipe;
 		ft_printf("{%d}\n", cur_pipe);
@@ -158,7 +158,7 @@ t_super	*make_super_repl(char **env)
 	res->programs[2].arguments = argv1_gen("/usr/bin/grep", "l");
 	res->programs[3].arguments = argv1_gen("/bin/cat", "-e");
 	res->programs[4].arguments = argv1_gen("/bin/cat", "-e");
-	
+
 	res->programs[0].fd[0] = 0;
 	res->programs[0].fd[1] = 1;
 	res->programs[1].fd[0] = 0;
@@ -169,19 +169,19 @@ t_super	*make_super_repl(char **env)
 	res->programs[3].fd[1] = 1;
 	res->programs[4].fd[0] = 0;
 	res->programs[4].fd[1] = 1;
-	
+
 	res->programs[0].env = env;
 	res->programs[1].env = env;
 	res->programs[2].env = env;
 	res->programs[3].env = env;
 	res->programs[4].env = env;
-	
+
 	res->programs[0].flags = C_PIPE;
 	res->programs[1].flags = C_LFT_RDR;
 	res->programs[2].flags = C_RT_RDR | C_PIPE;
 	res->programs[3].flags = C_PIPE;
 	res->programs[4].flags = C_RTT_RDR;
-	
+
 	res->programs[0].redirect_filename[1] = "qwe";
 	res->programs[0].redirect_filename[1] = "qwes";
 	res->programs[1].redirect_filename[0] = "11112";
@@ -197,12 +197,15 @@ int		main(int ac, char **av, char **env)
 {
 	t_super *super;
 
-	super = make_super_repl(env);
+	//super = make_super_repl(env);
+	super = init_super();
+	make_super(super);
+	print_super(super);
 
 	exec_commands(super);
 	//ft_printf("[%d]\t[%d]\n", fd1, fd2);
 	//exec_redirected(argv1_gen(get_path_with_env(env, "cat"), "-e"), fd1, fd2, env);
-	
+
 
 	ft_printf("END\n");
 }
