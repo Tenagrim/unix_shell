@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:31:24 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 15:53:19 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 17:32:25 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 # include <libft.h>
 # include <fcntl.h>
+# include <errno.h>
 # include <semantic.h>
 
 

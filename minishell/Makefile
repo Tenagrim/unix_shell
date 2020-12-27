@@ -10,7 +10,7 @@ INC=/usr/include
 INCLIB=$(INC)/../lib
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ_FILES = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
-FLAGS = -Wall -Wextra  -Iincludes/ -O0 #FIXME add -Werror
+FLAGS = -Wall -Wextra  -Iincludes/ -O0 -g #FIXME add -Werror
 CC= gcc $(FLAGS)
 
 all :  $(NAME)
