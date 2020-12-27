@@ -23,7 +23,6 @@ $(PRINTF) : ft_printf/libftprintf.a
 	$(CC) -c $< -o $@
 
 $(NAME) :  $(PRINTF) $(OBJ_FILES) $(HEADER)
-	echo $(SRC_FILES)
 	$(CC) -o $(NAME) $(OBJ_FILES) $(PRINTF)
 
 clean :

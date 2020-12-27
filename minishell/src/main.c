@@ -6,15 +6,13 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 15:57:11 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 16:57:24 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-#define C_LFT_RDR	(1 << 0)
-#define C_RT_RDR	(1 << 1)
-#define C_RTT_RDR	(1 << 2)
+
 
 typedef struct
 {
@@ -25,7 +23,7 @@ typedef struct
 	int				fds[2];
 }					t_cmd_args;
 
-char	**argv0_gen(char *command, char *av_1)
+char	**argv0_gen(char *command)
 {
 	char **res;
 	res = malloc(sizeof(char*) * 3);
@@ -82,42 +80,90 @@ int		exec_piped_commands(char **av1, char **av2, char **env)
 }
 */
 
-int		exec_commands(t_super *progs)
-{
-	int	i;
-	int	fds1[2];
-	int	fds2[2];
-
-	i = 0;
-	while (i < progs->count)
-	{
-
-		i++;
-	}
-}
-
-
 char	*get_path_with_env(char **env, char *name)
 {
 	return(find_path(get_env_value(env, "PATH"), name));
 }
 
+static int	**make_pipes(void)
+{
+	int	**res;
+
+	res = (int**)malloc(sizeof(int*) * 2);
+	res[0] = (int*)malloc(sizeof(int) * 2);
+	res[1] = (int*)malloc(sizeof(int) * 2);
+	return (res);
+}
+
+int		exec_commands(t_super *progs)
+{
+	int			i;
+	int			**pipes;
+	int			*cur_pipe;
+	t_program	*prog;
+
+	pipes = make_pipes();
+	cur_pipe = pipes[0];   //FIXME
+	i = 0;
+	while (i < progs->count)
+	{	
+		prog = progs->programs + i;
+		if (prog->flags & C_PIPE)
+		{
+			pipe(cur_pipe);
+			prog->fd[1] = cur_pipe[1];
+			progs->programs[i + 1].fd[0] = cur_pipe[0];
+		}
+		if (prog->flags & C_LFT_RDR)
+			prog->fd[0] = open(prog->redirect_filename[0], O_RDONLY);
+		if (prog->flags & C_RT_RDR)
+			prog->fd[1] = open(prog->redirect_filename[1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+		if (prog->flags & C_RTT_RDR)
+			prog->fd[1] = open(prog->redirect_filename[1], O_WRONLY | O_APPEND | O_CREAT, 0644);
+		ft_printf(">>[%s]\n", prog->arguments[0]);
+		exec_redirected(prog->arguments, prog->fd[0], prog->fd[1], prog->env);
+		i++;
+	}
+	return (0);
+}
+
+t_super	*make_super_repl(char **env)
+{
+	t_super *res;
+
+	res = malloc(sizeof(t_super));
+	res->programs = malloc(sizeof(t_program) * 2);
+	res->count = 2;
+	res->cap = 2;
+	res->programs[0].arguments = argv0_gen("/bin/ls");
+	res->programs[1].arguments = argv1_gen("/bin/cat", "-e");
+	
+	res->programs[0].fd[0] = 0;
+	res->programs[0].fd[1] = 1;
+	res->programs[1].fd[0] = 0;
+	res->programs[1].fd[1] = 1;
+	
+	res->programs[0].env = env;
+	res->programs[1].env = env;
+	
+	res->programs[0].flags = 0;
+	res->programs[1].flags = C_LFT_RDR;
+	
+	res->programs[0].redirect_filename[1] = "qwe";
+	res->programs[1].redirect_filename[0] = "qwe";
+	return (res);
+}
+
+
+
+
 int		main(int ac, char **av, char **env)
 {
-	int fd1;
-	int	fd2;
-	t_cmd_args args;
+	t_super *super;
 
-	int	fds[2];
+	super = make_super_repl(env);
 
-	//fd1 = open("file", O_WRONLY | O_CREAT, 0644);
-	fd1 = open("file", O_RDONLY);
-	fd2 = open("file_out", O_WRONLY | O_CREAT, 0644);
-
-
-	pipe(fds);
-	exec_redirected(argv1_gen(get_path_with_env(env, "ls"), "."), 0, fds[1], env);
-	exec_redirected(argv1_gen(get_path_with_env(env, "grep"), "l"), fds[0], 1, env);
+	exec_commands(super);
 	//ft_printf("[%d]\t[%d]\n", fd1, fd2);
 	//exec_redirected(argv1_gen(get_path_with_env(env, "cat"), "-e"), fd1, fd2, env);
 	

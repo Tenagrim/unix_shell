@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/27 16:01:44 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 17:25:26 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # define C_LFT_RDR	(1 << 0)
 # define C_RT_RDR	(1 << 1)
 # define C_RTT_RDR	(1 << 2)
+# define C_PIPE		(1 << 3)
+# define C_BUILTIN	(1 << 4)
 
 typedef struct	s_program
 {
@@ -24,6 +26,7 @@ typedef struct	s_program
 	char		*redirect_filename[2];
 	unsigned	flags;
 	int			fd[2];
+	char		**env;
 }				t_program;
 
 typedef struct	s_super
