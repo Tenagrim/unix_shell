@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 14:53:04 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 14:53:16 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 21:27:59 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int		exec_redirected(char **av, int fd_in, int fd_out, char **env)
 
 	ret = 0;
 	pid = fork();
+	ft_printf("fd_in: %d fd_out: %d\n", fd_in, fd_out);
 	if (!pid)
 	{
 		if (fd_in != 0)

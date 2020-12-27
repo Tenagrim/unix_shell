@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 19:38:14 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 21:33:18 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,13 @@ static int	**make_pipes(void)
 	res[1] = (int*)malloc(sizeof(int) * 2);
 	return (res);
 }
-
+static int	free_pipes(int **pipes, int ret)
+{
+	free(pipes[0]);
+	free(pipes[1]);
+	free(pipes);
+	return (ret);
+}
 int		exec_commands(t_super *progs)
 {
 	int			i;
@@ -124,18 +130,19 @@ int		exec_commands(t_super *progs)
 		if (prog->flags & C_RTT_RDR)
 			prog->fd[1] = open(prog->redirect_filename[1], O_WRONLY | O_APPEND | O_CREAT, 0644);
 		if (prog->flags & C_PIPE && (prog->flags & C_RT_RDR || prog->flags & C_RTT_RDR))
-		{
 			close(pipes[cur_pipe][1]);
-			ft_printf("CLOSE\n");
-		}
+		if (i != 0 && progs->programs[i - 1].flags & C_PIPE && prog->flags & C_LFT_RDR)
+			close(pipes[!cur_pipe][0]);
 		ft_printf(">>[%s] in: %d  out: %d\n", prog->arguments[0], prog->fd[0], prog->fd[1]);
+		if (prog->fd[0] == -1)
+		{
+			ft_printf("minishell: %s: No such file or directory\n", prog->redirect_filename[0]); //FIXME to stderr
+			return (free_pipes(pipes, 0));
+		}
 		exec_redirected(prog->arguments, prog->fd[0], prog->fd[1], prog->env);
 		i++;
 	}
-	free(pipes[0]);
-	free(pipes[1]);
-	free(pipes);
-	return (0);
+	return (free_pipes(pipes, 0));
 }
 
 t_super	*make_super_repl(char **env)
@@ -144,7 +151,7 @@ t_super	*make_super_repl(char **env)
 
 	res = malloc(sizeof(t_super));
 	res->programs = malloc(sizeof(t_program) * 5);
-	res->count = 1;
+	res->count = 2;
 	res->cap = 2;
 	res->programs[0].arguments = argv0_gen("/bin/ls");
 	res->programs[1].arguments = argv1_gen("/bin/cat", "-e");
@@ -169,15 +176,15 @@ t_super	*make_super_repl(char **env)
 	res->programs[3].env = env;
 	res->programs[4].env = env;
 	
-	res->programs[0].flags = C_RT_RDR;
-	res->programs[1].flags = C_PIPE;
+	res->programs[0].flags = C_PIPE;
+	res->programs[1].flags = C_LFT_RDR;
 	res->programs[2].flags = C_RT_RDR | C_PIPE;
 	res->programs[3].flags = C_PIPE;
 	res->programs[4].flags = C_RTT_RDR;
 	
 	res->programs[0].redirect_filename[1] = "qwe";
 	res->programs[0].redirect_filename[1] = "qwes";
-	res->programs[1].redirect_filename[0] = "qwe";
+	res->programs[1].redirect_filename[0] = "11112";
 	res->programs[4].redirect_filename[1] = "qwe";
 	res->programs[2].redirect_filename[1] = "ssssssss";
 	return (res);
