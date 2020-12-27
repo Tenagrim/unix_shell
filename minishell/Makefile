@@ -10,7 +10,7 @@ INC=/usr/include
 INCLIB=$(INC)/../lib
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ_FILES = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
-FLAGS = -Wall -Wextra -Werror  -Iincludes/ -O0
+FLAGS = -Wall -Wextra  -Iincludes/ -O0 -g #FIXME add -Werror
 CC= gcc $(FLAGS)
 
 all :  $(NAME)
@@ -23,7 +23,6 @@ $(PRINTF) : ft_printf/libftprintf.a
 	$(CC) -c $< -o $@
 
 $(NAME) :  $(PRINTF) $(OBJ_FILES) $(HEADER)
-	echo $(SRC_FILES)
 	$(CC) -o $(NAME) $(OBJ_FILES) $(PRINTF)
 
 clean :

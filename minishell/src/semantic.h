@@ -6,21 +6,16 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/27 21:57:48 by jsandsla         ###   ########.fr       */
+/*   Updated: 2020/12/27 22:25:41 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#ifndef SEMANTIC_H
-# define SEMANTIC_H
-
-# include "token.h"
-
-typedef struct	s_program
+ogram
 {
 	char		**arguments;
 	char		*redirect_filename[2];
 	unsigned	flags;
 	int			fd[2];
+	char		**env;
 }				t_program;
 
 typedef struct	s_super
@@ -44,6 +39,12 @@ typedef struct	s_super
 # define SUP_ERROR_UNRECOGNIZED_REDIRECTION (-56)
 # define SUP_ERROR_INVALID_EXEC_SEPARATION (-57)
 # define SUP_ERROR_INVALID_PIPE_SYNTAX (-58)
+
+# define C_LFT_RDR	(1 << 0)
+# define C_RT_RDR	(1 << 1)
+# define C_RTT_RDR	(1 << 2)
+# define C_PIPE		(1 << 3)
+# define C_BUILTIN	(1 << 4)
 
 # define SUP_REDIRECTION_IN_FLAG (1 << 0)
 # define SUP_REDIRECTION_OUT_FLAG (1 << 1)
