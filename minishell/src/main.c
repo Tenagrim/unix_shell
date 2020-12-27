@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 15:43:34 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 15:57:11 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	**argv1_gen(char *command, char *av_1)
 	return (res);
 }
 
-
+/*
 int		exec_piped_commands(char **av1, char **av2, char **env)
 {
 	int	pid;
@@ -80,23 +80,21 @@ int		exec_piped_commands(char **av1, char **av2, char **env)
 	}
 	return (0);
 }
-/*
-void	pipe_head(int *fds, char **av)
-{
-		close(fds[0]);
-        dup2(fds[1], 1);
-		ret = execve(av[0], av, env);
-		ft_printf("execve returned: %d\n", ret);
-		exit(0);
-}
-
-void	red_in(int *fds)
-{
-		close(fds[1]);
-        dup2(fds[0], 0);
-}
 */
 
+int		exec_commands(t_super *progs)
+{
+	int	i;
+	int	fds1[2];
+	int	fds2[2];
+
+	i = 0;
+	while (i < progs->count)
+	{
+
+		i++;
+	}
+}
 
 
 char	*get_path_with_env(char **env, char *name)

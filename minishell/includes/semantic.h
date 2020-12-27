@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/27 16:01:44 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 15:45:54 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 # define SEMANTIC_H
 
 # include "token.h"
-# define C_LFT_RDR	(1 << 0)
-# define C_RT_RDR	(1 << 1)
-# define C_RTT_RDR	(1 << 2)
 
 typedef struct	s_program
 {

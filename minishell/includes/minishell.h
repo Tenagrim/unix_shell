@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:31:24 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 14:56:05 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/27 15:53:19 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,7 @@
 # define MINISHELL_H
 # include <libft.h>
 # include <fcntl.h>
-
-typedef		struct{
-
-}			t_args;
+# include <semantic.h>
 
 
 /*
