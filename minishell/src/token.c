@@ -50,10 +50,10 @@ t_tkz	*tkz_init(void)
 	if (tkz)
 	{
 		tkz->tkn_cap = 16;
+		tkz->tkn_count = 0;
 		tkz->tkn = malloc(sizeof(t_token) * tkz->tkn_cap);
 		if (tkz->tkn)
 		{
-			tkz->tkn_count = 0;
 			tkz->state = 0;
 			tkz_buf_init(&tkz->buf);
 		}
