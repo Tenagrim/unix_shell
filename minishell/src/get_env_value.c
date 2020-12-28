@@ -16,7 +16,12 @@ char	*get_env_value(char **env, char *key)
 			return (eq + 1);
 		p++;
 	}
-	return ("");
+	return (0);
 }
 
+int		get_env(void *data, char *name, char **value)
+{
+	*value = get_env_value((char **)data, name);
+	return (!!*value);
+}
 
