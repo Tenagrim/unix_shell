@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:31:24 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 17:32:25 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/28 20:04:36 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <libft.h>
 # include <fcntl.h>
 # include <errno.h>
+# include <signal.h>
 # include <semantic.h>
 
 
@@ -41,9 +42,11 @@ int		find_file_in_dir(char *dir_name, char *file);
 ** return must be freed
 */
 char	*find_path(char *path, char *name);
-int		exec_redirected(char **av, int fd_in, int fd_out, char **env);
+int		exec_redirected(char *exec_path, char **av, int *fds, char **env);
+int		exec_commands(t_super *progs, char **env);
 int		exec_command(char **av, char **env);
 char	**copy_env(char **env);
+int		replace_exec_path(char **value, char **env);
 void	free_nullterm_char_arr(char ***arr);
 void	print_env(char **env);
 
