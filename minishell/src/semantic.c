@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:19 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/27 22:34:25 by jsandsla         ###   ########.fr       */
+/*   Updated: 2020/12/28 14:59:40 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ t_super	*init_super(void)
 	if (super)
 	{
 		super->cap = 16;
+		super->count = 0;
 		super->programs = malloc(sizeof(t_program) * super->cap);
 		if (super->programs)
 		{
-			super->count = 0;
 			super->tkz = tkz_init();
 			super->tkz_error = TKZ_SUCCESS;
 			super->current_token = 0;
