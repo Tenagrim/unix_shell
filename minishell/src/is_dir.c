@@ -1,27 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   write_prompt.c                                     :+:      :+:    :+:   */
+/*   is_dir.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/29 14:22:36 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 19:02:25 by gshona           ###   ########.fr       */
+/*   Created: 2020/12/29 19:23:09 by gshona            #+#    #+#             */
+/*   Updated: 2020/12/29 19:24:42 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
-void	write_prompt(void)
+int	is_dir(char *name)
 {
-	char	prompt[301];
-	char	*prompt_2;
+	struct	stat buff;
+	int		ret;
 
-	prompt_2 = "minishell: ";
-	write(2, prompt_2, ft_strlen(prompt_2));
-//	if (getcwd(prompt, 300))
-//		write(2, prompt, ft_strlen(prompt));
-//	else
-//		write(2, "{long path}", 11);
-	write(2, " $ ", 3);
+	ret = stat(name, &buff);
+	return (buff.st_mode & S_IFDIR);
 }
+

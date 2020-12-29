@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 17:51:07 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 20:44:44 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,137 @@ static int	free_pipes(int **pipes, int ret)
 	return (ret);
 }
 
-int			exit_biultin(const char *path, char *const argv[], char *const envp[])
+int			exit_biultin(char *const argv[], t_env *env)
 {
+	print_error("exit\n");
 	exit(0);	
 }
 
+int			echo_biultin(char *const argv[], t_env *env)
+{
+	char	min_n;
+	int		i;
 
-int			(*get_exec_func(char *name))(const char *path, char *const argv[], char *const envp[])
+	i = 1;
+	min_n = 0;
+	if (!ft_strcmp("-n", argv[1]))
+	{
+		i++;
+		min_n = 1;
+	}
+	while (argv[i])
+	{
+		write(1, argv[i], ft_strlen(argv[i]));
+		write(1, " ", 1);
+		i++;
+	}
+	if (!min_n)
+		write(1, "\n", 1);
+	return (0);
+}
+
+static	void	print_error2(char *error, char  *str)
+{
+	write(2, "minishell: ", 11);
+	write(2, str, ft_strlen(str));
+	write(2, ": ", 2);
+	write(2, error, ft_strlen(error));
+	write(2, "\n", 1);
+}
+
+int			cd_biultin(char *const argv[], t_env *env)
+{
+	int		ret;
+	char	*home;
+
+	ret = 1;
+	if (!argv[1])
+	{
+		if (!find_env_variable_cb(env, "HOME", &home))
+			{
+				print_error("minishell: cd: HOME not set\n");
+				return (1);
+			}
+		ret = chdir(home);
+	}
+	else if (!is_dir(argv[1]))
+	{
+		print_error2("Not a directory", argv[1]);
+		exit(1);
+	}
+	else
+		ret = chdir(argv[1]);
+	if (ret)
+		print_error("ERROR CD\n");
+	return ((ret == 0) ? 0 : 1);
+}
+
+int			env_biultin(char *const argv[], t_env *env)
+{
+	print_env(env);
+	return (0);
+}
+
+int			export_biultin(char *const argv[], t_env *env)
+{
+	int i;
+	int ret;
+
+	i = 1;
+	ret = 1;
+	while (ret &&  argv[i])
+	{
+		ret = add_env_variable_expr(env, argv[i], ft_strlen(argv[i]));
+		if (!ret)
+			print_error("minishell: bad assignment\n");
+		i++;
+	}
+	return (!ret);
+}
+
+int			unset_biultin(char *const argv[], t_env *env)
+{
+	int i;
+
+	i = 1;
+	while (argv[i])
+	{
+		remove_env_variable(env, argv[i], ft_strlen(argv[i]));
+		i++;
+	}
+
+	return (0);
+}
+
+int			pwd_biultin(char *const argv[], t_env *env)
+{
+	char	path[500];
+	if (getcwd(path, 500))
+		write(1, path, ft_strlen(path));
+	write(1, "\n", 1);
+	return (0);	
+}
+
+int			(*get_exec_func(char *name))(char *const argv[], t_env *env)
 {
 	if (!ft_strcmp("exit", name))
 		return (exit_biultin);
-	return (execve);
+	if (!ft_strcmp("echo", name))
+		return (echo_biultin);
+	if (!ft_strcmp("cd", name))
+		return (cd_biultin);
+	if (!ft_strcmp("pwd", name))
+		return (pwd_biultin);
+	if (!ft_strcmp("env", name))
+		return (env_biultin);
+	if (!ft_strcmp("export", name))
+		return (export_biultin);
+	if (!ft_strcmp("unset", name))
+		return (unset_biultin);
+	return (NULL);
 }
 
-int		exec_commands(t_super *progs, char **env)
+int		exec_commands(t_super *progs, t_env *env)
 {
 	int			i;
 	int			**pipes;
@@ -52,7 +169,7 @@ int		exec_commands(t_super *progs, char **env)
 	int			inp_fd;
 	int			fds[2];
 	char		*exec_path;
-	int			(*exec_func)(const char *path, char *const argv[], char *const envp[]);
+	int			(*exec_func)(char *const argv[], t_env *env);
 
 	pipes = make_pipes();
 	cur_pipe = 0;
@@ -68,7 +185,7 @@ int		exec_commands(t_super *progs, char **env)
 		inp_fd = 0;
 		exec_path = ft_strdup(prog->arguments[0]);
 		exec_func = get_exec_func(exec_path);
-		if (exec_func == execve  && !(replace_exec_path(&exec_path, env)))
+		if (!exec_func && !(replace_exec_path(&exec_path, env)))
 		{
 			ft_printf("minishell: %s: command not found\n", exec_path); //FIXME to stderr
 			free(exec_path);

@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/29 17:40:49 by jsandsla         ###   ########.fr       */
+/*   Updated: 2020/12/29 20:36:50 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ int		tkz_is_quote(char c)
 
 int		tkz_is_control(char c)
 {
-	return (c == '$' ||	c == '|' || c == '<' || c == '>' || c == '=');
+	return (c == '$' ||	c == '|' || c == '<' || c == '>');
 }
 
 int		tkz_is_word(char c)

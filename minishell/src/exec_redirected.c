@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 14:53:04 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 17:49:00 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 20:13:25 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,26 @@ static void		dup_fds(int *fds)
 }
 
 //int				exec_redirected(char *exec_path, char **av, int *fds, char **env)
-int		exec_redirected(int (*exec_func)(const char *path, char *const argv[], char *const envp[]),char *exec_path, char **av, int *fds, char **env)
+int		exec_redirected(int (*exec_func)(char *const argv[], t_env *env),char *exec_path, char **av, int *fds, t_env *env)
 {
-	int	pid;
-	int	status;
-	int	ret;
-	int	sig;
+	int		pid;
+	int		status;
+	int		ret;
+	int		sig;
+	char	**nat;
+	int		o_fds[2];
 
 	ret = 0;
-	if (exec_func == exit_biultin)
+	if (exec_func)
 	{
-		ret = exec_func(exec_path, av, env);
+		o_fds[0] = dup(0);
+		o_fds[1] = dup(1);
+		dup_fds(fds);
+		ret = exec_func(av, env);
+		close_fds(fds);
+		dup2(o_fds[0], 0);
+		dup2(o_fds[1], 1);
+		return (ret);
 	}
 	pid = fork();
  	signal(2, forked_signal_handler);
@@ -47,7 +56,9 @@ int		exec_redirected(int (*exec_func)(const char *path, char *const argv[], char
 	if (!pid)
 	{
 		dup_fds(fds);
-		ret = exec_func(exec_path, av, env);
+			nat = gen_native_env(env);
+			ret = execve(exec_path, av, nat);
+			free_env_native(nat);
 		ft_printf("minishell: %s: %s\n", exec_path, strerror(errno));
 		exit(ret);
 	}

@@ -111,7 +111,7 @@ int		get_variable(t_env *env, char *key, int klen) {
 
 	success = 1;
 	i = find_env_variable(env, key, klen);
-	printf("k:%.*s[%d]\n", klen, key, i);
+	//printf("k:%.*s[%d]\n", klen, key, i);
 	if (i < 0) {
 		if (env->var_count >= env->var_cap) {
 			success = expand_env_variables_array(env);
@@ -208,9 +208,9 @@ int		find_env_variable(t_env *env, char *key, int klen) {
 	i = 0;
 	while (i < env->var_count) {
 		var = &env->var[i];
-		printf("cmp[%.*s|%.*s]\n", klen, key, var->key_len, var->key);
+		//printf("cmp[%.*s|%.*s]\n", klen, key, var->key_len, var->key);
 		if (string_eq(key, klen, var->key, var->key_len)) {
-			printf("!!!\n");
+			//printf("!!!\n");
 			break ;
 		}
 		i += 1;

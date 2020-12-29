@@ -6,30 +6,31 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 18:40:01 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 17:05:47 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 18:40:08 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int		is_builtin(char *name)
+static char	*get_path_with_env(t_env *env, char *name)
 {
-	if (!ft_strcmp("echo", name))
-		return (1);
-	return (0);
+	int		ret;
+	char	*path;
+	char	*res;
+
+	if (!find_env_variable_cb(env, "PATH", &path))
+		return (NULL);
+	res = find_path(path, name);
+	free(path);
+	return (res);
 }
 
-static char	*get_path_with_env(char **env, char *name)
-{
-	return(find_path(get_env_value(env, "PATH"), name));
-}
-
-static int		get_command_ex(void *builtin_table, char **env, char *name, char **res)
+static int		get_command_ex(void *builtin_table, t_env *env, char *name, char **res)
 {
 	char	*in_path;
 
 	(void)builtin_table;
-	if (is_builtin(name) || *name == '/' || *name == '.' || ft_strchr(name, '/'))
+	if (*name == '/' || *name == '.' || ft_strchr(name, '/'))
 	{
 		*res = ft_strdup(name);
 		return (1);
@@ -42,7 +43,7 @@ static int		get_command_ex(void *builtin_table, char **env, char *name, char **r
 	return (0);
 }
 
-int		replace_exec_path(char **value, char **env)
+int		replace_exec_path(char **value, t_env *env)
 {
 	char	*tmp;
 	char	*repl;

@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 17:42:35 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 18:28:36 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,24 @@ int		find_by_path(char *name)
 int		main(int ac, char **av, char **env)
 {
 	t_super		*super;
+	t_env		*env_t;
 	int			err;
 
  	signal(2, signal_handler);
 	signal(3, signal_handler);
 	err = 1;
+	super = init_super();
+	env_t = init_env();
+	merge_env_native(env_t, env);
 
-	while (err == 1)
+	while (err == 1 || err == -6)
 	{
 		if (err != -6)
 			write_prompt();
-		super = init_super();
 		err =  make_super(super);
 
 		//print_super(super);
-		exec_commands(super, env);
+		exec_commands(super, env_t);
 		//free_super(&super);
 		//ft_printf("%d -------\n",err);
 	}
