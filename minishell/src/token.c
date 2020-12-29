@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/29 16:04:38 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 17:40:49 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ void	tkz_free_tokens(t_tkz *tkz)
 
 void	tkz_free(t_tkz **tkz)
 {
-	int		i;
-
 	if ((*tkz)->tkn)
 	{
 		tkz_free_tokens(*tkz);
@@ -98,6 +96,8 @@ t_cchar	*tkz_error_str(int error)
 		return ("unistd read eof");
 	else if (error == TKZ_ERROR_MALLOC_NULL_RETURN)
 		return ("malloc null return");
+	else if (error == TKZ_ERROR_BUFFER_REMAINS)
+		return ("buffer remains");
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_NORMAL_ESCAPE)
 		return ("contract is terminated for backslash normal escape");
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_DQUOTE_ESCAPE)
@@ -113,6 +113,32 @@ t_cchar	*tkz_error_str(int error)
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_DQUOTE_SYMBOL)
 		return ("contract is terminated for dquote symbol");
 	return ("undefined value");
+}
+
+int		tkz_is_wp(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\f' || c == '\v' || c == '\r');
+}
+
+int		tkz_is_endcommand(char c)
+{
+	return (c == '\n' || c == ';');
+}
+
+int		tkz_is_quote(char c)
+{
+	return (c == '\'' || c == '"');
+}
+
+int		tkz_is_control(char c)
+{
+	return (c == '$' ||	c == '|' || c == '<' || c == '>' || c == '=');
+}
+
+int		tkz_is_word(char c)
+{
+	return (!tkz_is_endcommand(c) && !tkz_is_wp(c) && !tkz_is_control(c) &&
+			!tkz_is_quote(c));
 }
 
 void	tkz_memcpy(void *l, void *r, int size)
@@ -131,7 +157,6 @@ int		tkz_expand_tokens_array(t_tkz *tkz)
 {
 	int		new_cap;
 	t_token	*new_ptr;
-	int		i;
 
 	new_cap = tkz->tkn_cap * 2;
 	if (new_cap <= 0)
@@ -153,7 +178,7 @@ int		tkz_check_token_end_condition(t_tkz *tkz, t_token *tkn)
 {
 	if (tkz->state != 0)
 		return (0);
-	if (tkn->len > 0 && tkn->mem[tkn->len - 1] == '\n')
+	if (tkn->len > 0 && tkz_is_endcommand(tkn->mem[tkn->len - 1]))
 		return (1);
 	return (0);
 }
@@ -191,32 +216,6 @@ void	tkz_free_token(t_token *tkn)
 	if (tkn->mem)
 		free(tkn->mem);
 	tkz_init_token(tkn);
-}
-
-int		tkz_is_wp(char c)
-{
-	return (c == ' ' || c == '\t' || c == '\f' || c == '\v' || c == '\r');
-}
-
-int		tkz_is_endcommand(char c)
-{
-	return (c == '\n' || c == ';');
-}
-
-int		tkz_is_quote(char c)
-{
-	return (c == '\'' || c == '"');
-}
-
-int		tkz_is_control(char c)
-{
-	return (c == '$' ||	c == '|' || c == '<' || c == '>' || c == '=');
-}
-
-int		tkz_is_word(char c)
-{
-	return (!tkz_is_endcommand(c) && !tkz_is_wp(c) && !tkz_is_control(c) &&
-			!tkz_is_quote(c));
 }
 
 int		tkz_prefetch_buffer(t_tkz_buf *buf, int count)
@@ -408,7 +407,6 @@ int		tkz_subprocessor_env(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 
 int		tkz_subprocessor_dollar(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
-	char	c;
 	int		error;
 
 	if (tkz_buffer_view_char(buf, 0) != '$')
@@ -468,6 +466,8 @@ int		tkz_subprocessor_control(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	int		error;
 
 	error = TKZ_SUCCESS;
+	if (tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
+		return (error);
 	c = tkz_buffer_view_char(buf, 0);
 	if (!tkz_is_control(c))
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_CONTROL_CHARACTER);
@@ -689,6 +689,8 @@ int		tkz_make(t_tkz *tkz)
 	if (!tkz_is_error(error))
 		tkz_buffer_skip_endcommand(&tkz->buf);
 	tkz_remove_last_empty_tokens(tkz);
+	if (!tkz_is_error(error) && tkz->buf.len > 0)
+		error = TKZ_ERROR_BUFFER_REMAINS;
 	return (error);
 }
 
