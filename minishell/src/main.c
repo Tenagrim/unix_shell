@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 15:26:40 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 16:32:19 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int		main(int ac, char **av, char **env)
 	//ft_printf("%s\n", av[0]);
  	signal(2, signal_handler);
 	signal(3, signal_handler);
-	while (1)
+	err = 1;
+	while (err == 1)
 	{
 		write_prompt();
 		super = init_super();
@@ -44,7 +45,7 @@ int		main(int ac, char **av, char **env)
 
 		//print_super(super);
 		exec_commands(super, env);
-		free_super(&super);
+		//free_super(&super);
 		//ft_printf("%d -------\n",err);
 	}
 }

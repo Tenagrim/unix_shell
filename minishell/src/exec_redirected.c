@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 14:53:04 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 15:47:27 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 16:24:18 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int				exec_redirected(char *exec_path, char **av, int *fds, char **env)
 	int	pid;
 	int	status;
 	int	ret;
+	int	sig;
 
 	ret = 0;
 	pid = fork();
@@ -53,6 +54,11 @@ int				exec_redirected(char *exec_path, char **av, int *fds, char **env)
 	}
 	wait(&status);
 	close_fds(fds);
+	sig =  WTERMSIG(status);
+	if (sig == 3)
+		print_error("Quit: 3\n");
+	if (sig == 2)
+		write(2, "\n", 1);
  	signal(2, signal_handler);
 	signal(3, signal_handler);
 	return (status);
