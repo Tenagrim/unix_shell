@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/28 19:14:51 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 15:45:25 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,20 @@ int		exec_commands(t_super *progs, char **env)
 	int			**pipes;
 	int			cur_pipe;
 	t_program	*prog;
+	int			inp_fd;
 	int			fds[2];
 	char		*exec_path;
 
 	pipes = make_pipes();
 	cur_pipe = 0;
 	i = 0;
+	inp_fd = 0;
 	while (i < progs->count)
 	{
 		prog = progs->programs + i;
-		fds[0] = 0;
+		fds[0] = inp_fd;
 		fds[1] = 1;
+		inp_fd = 0;
 		exec_path = ft_strdup(prog->arguments[0]);
 		if (!(replace_exec_path(&exec_path, env)))
 		{
@@ -61,9 +64,8 @@ int		exec_commands(t_super *progs, char **env)
 		if (prog->flags & C_PIPE)
 		{
 			pipe(pipes[cur_pipe]);
-			prog->fd[1] = pipes[cur_pipe][1];
-			progs->programs[i + 1].fd[0] = pipes[cur_pipe][0];
-			ft_printf("PIPE\n");
+			fds[1] = pipes[cur_pipe][1];
+			inp_fd = pipes[cur_pipe][0];
 		}
 		if (prog->flags & C_LFT_RDR)
 			fds[0] = open(prog->redirect_filename[0], O_RDONLY);

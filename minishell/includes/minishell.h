@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:31:24 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/28 20:04:36 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 15:47:55 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <signal.h>
+# include <string.h>
 # include <semantic.h>
-
 
 /*
 ** get_env_value
@@ -48,6 +48,10 @@ int		exec_command(char **av, char **env);
 char	**copy_env(char **env);
 int		replace_exec_path(char **value, char **env);
 void	free_nullterm_char_arr(char ***arr);
-void	print_env(char **env);
+void	print_env_e(char **env);
+void	forked_signal_handler(int sig);
+void	signal_handler(int sig);
+void	write_prompt(void);
+void	print_error(char *error);
 
 #endif
