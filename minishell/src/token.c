@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/29 17:12:27 by jsandsla         ###   ########.fr       */
+/*   Updated: 2020/12/29 17:40:49 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ t_cchar	*tkz_error_str(int error)
 		return ("unistd read eof");
 	else if (error == TKZ_ERROR_MALLOC_NULL_RETURN)
 		return ("malloc null return");
+	else if (error == TKZ_ERROR_BUFFER_REMAINS)
+		return ("buffer remains");
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_NORMAL_ESCAPE)
 		return ("contract is terminated for backslash normal escape");
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_DQUOTE_ESCAPE)
@@ -687,6 +689,8 @@ int		tkz_make(t_tkz *tkz)
 	if (!tkz_is_error(error))
 		tkz_buffer_skip_endcommand(&tkz->buf);
 	tkz_remove_last_empty_tokens(tkz);
+	if (!tkz_is_error(error) && tkz->buf.len > 0)
+		error = TKZ_ERROR_BUFFER_REMAINS;
 	return (error);
 }
 
