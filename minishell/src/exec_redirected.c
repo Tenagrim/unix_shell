@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 14:53:04 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 16:24:18 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 17:49:00 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ static void		dup_fds(int *fds)
 		dup2(fds[1], 1);
 }
 
-int				exec_redirected(char *exec_path, char **av, int *fds, char **env)
+//int				exec_redirected(char *exec_path, char **av, int *fds, char **env)
+int		exec_redirected(int (*exec_func)(const char *path, char *const argv[], char *const envp[]),char *exec_path, char **av, int *fds, char **env)
 {
 	int	pid;
 	int	status;
@@ -36,13 +37,17 @@ int				exec_redirected(char *exec_path, char **av, int *fds, char **env)
 	int	sig;
 
 	ret = 0;
+	if (exec_func == exit_biultin)
+	{
+		ret = exec_func(exec_path, av, env);
+	}
 	pid = fork();
  	signal(2, forked_signal_handler);
 	signal(3, forked_signal_handler);
 	if (!pid)
 	{
 		dup_fds(fds);
-		ret = execve(exec_path, av, env);
+		ret = exec_func(exec_path, av, env);
 		ft_printf("minishell: %s: %s\n", exec_path, strerror(errno));
 		exit(ret);
 	}

@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:31:24 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 15:47:55 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 17:46:56 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int		find_file_in_dir(char *dir_name, char *file);
 ** return must be freed
 */
 char	*find_path(char *path, char *name);
-int		exec_redirected(char *exec_path, char **av, int *fds, char **env);
+int		exec_redirected(int (*exec_func)(const char *path, char *const argv[], char *const envp[]),char *exec_path, char **av, int *fds, char **env);
 int		exec_commands(t_super *progs, char **env);
 int		exec_command(char **av, char **env);
 char	**copy_env(char **env);
@@ -53,5 +53,6 @@ void	forked_signal_handler(int sig);
 void	signal_handler(int sig);
 void	write_prompt(void);
 void	print_error(char *error);
+int		exit_biultin(const char *path, char *const argv[], char *const envp[]);
 
 #endif

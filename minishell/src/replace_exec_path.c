@@ -6,11 +6,18 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 18:40:01 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/28 19:11:42 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 17:05:47 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+int		is_builtin(char *name)
+{
+	if (!ft_strcmp("echo", name))
+		return (1);
+	return (0);
+}
 
 static char	*get_path_with_env(char **env, char *name)
 {
@@ -22,7 +29,7 @@ static int		get_command_ex(void *builtin_table, char **env, char *name, char **r
 	char	*in_path;
 
 	(void)builtin_table;
-	if (*name == '/' || *name == '.' || ft_strchr(name, '/'))
+	if (is_builtin(name) || *name == '/' || *name == '.' || ft_strchr(name, '/'))
 	{
 		*res = ft_strdup(name);
 		return (1);

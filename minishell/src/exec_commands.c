@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 15:45:25 by gshona           ###   ########.fr       */
+/*   Updated: 2020/12/29 17:51:07 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,19 @@ static int	free_pipes(int **pipes, int ret)
 	return (ret);
 }
 
+int			exit_biultin(const char *path, char *const argv[], char *const envp[])
+{
+	exit(0);	
+}
+
+
+int			(*get_exec_func(char *name))(const char *path, char *const argv[], char *const envp[])
+{
+	if (!ft_strcmp("exit", name))
+		return (exit_biultin);
+	return (execve);
+}
+
 int		exec_commands(t_super *progs, char **env)
 {
 	int			i;
@@ -39,11 +52,14 @@ int		exec_commands(t_super *progs, char **env)
 	int			inp_fd;
 	int			fds[2];
 	char		*exec_path;
+	int			(*exec_func)(const char *path, char *const argv[], char *const envp[]);
 
 	pipes = make_pipes();
 	cur_pipe = 0;
 	i = 0;
 	inp_fd = 0;
+
+
 	while (i < progs->count)
 	{
 		prog = progs->programs + i;
@@ -51,7 +67,8 @@ int		exec_commands(t_super *progs, char **env)
 		fds[1] = 1;
 		inp_fd = 0;
 		exec_path = ft_strdup(prog->arguments[0]);
-		if (!(replace_exec_path(&exec_path, env)))
+		exec_func = get_exec_func(exec_path);
+		if (exec_func == execve  && !(replace_exec_path(&exec_path, env)))
 		{
 			ft_printf("minishell: %s: command not found\n", exec_path); //FIXME to stderr
 			free(exec_path);
@@ -83,10 +100,11 @@ int		exec_commands(t_super *progs, char **env)
 			ft_printf("minishell: %s: No such file or directory\n", prog->redirect_filename[0]); //FIXME to stderr
 			return (free_pipes(pipes, 1));
 		}
-		exec_redirected(exec_path, prog->arguments, fds, env);
+		exec_redirected(exec_func, exec_path, prog->arguments, fds, env);
+		if (exec_path)
+			free(exec_path);
 		i++;
 	}
-	free(exec_path);
 	return (free_pipes(pipes, 0));
 }
 
