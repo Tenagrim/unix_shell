@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/02 22:27:31 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/02 23:10:45 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -576,18 +576,20 @@ int		tkz_processor_dquote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	return (error);
 }
 
-int		tkz_buffer_skip_whitespaces_with_prefetching(t_tkz_buf *buf)
+int		tkz_skip_whitespaces_with_prefetching(t_tkz *tkz)
 {
 	char	c;
 	int		error;
 
-	error = TKZ_SUCCESS;
+	error = tkz_prefetch_buffer(&tkz->buf, 1);
 	while (!tkz_is_error(error) &&
-			(c = tkz_buffer_view_char(buf, 0)) && !tkz_is_endcommand(c) &&
+			(c = tkz_buffer_view_char(&tkz->buf, 0)) && !tkz_is_endcommand(c) &&
 			tkz_is_wp(c))
 	{
-		tkz_buffer_increment(buf, 1);
-		error = tkz_prefetch_buffer(buf, 1);
+		if (tkz->tkn_count == 1)
+			tkz->flags |= TKZ_FLAG_WS_AT_START;
+		tkz_buffer_increment(&tkz->buf, 1);
+		error = tkz_prefetch_buffer(&tkz->buf, 1);
 	}
 	return (error);
 }
@@ -647,9 +649,9 @@ int		tkz_make_token(t_tkz *tkz, int i_tkn, int *remains)
 
 	tkn = &tkz->tkn[i_tkn];
 	tkz_init_token(tkn);
-	error = tkz_buffer_skip_whitespaces_with_prefetching(&tkz->buf);
+	error = tkz_skip_whitespaces_with_prefetching(tkz);
 	tkz->state = STATE_NORMAL;
-	condition = 1;
+	condition = tkz_token_continue_condition(tkz, tkn, &tkz->buf);
 	while (!tkz_is_error(error) && condition)
 	{
 		do {
@@ -698,7 +700,7 @@ int		tkz_make(t_tkz *tkz)
 	tkz_buffer_full_skip_endcommand(&tkz->buf);
 	tkz_remove_last_empty_tokens(tkz);
 	if (tkz_is_error(error) && (error == TKZ_ERROR_UNISTD_READ_EOF &&
-			tkz->tkn_count != 0))
+			(tkz->tkn_count != 0 || tkz->flags & TKZ_FLAG_WS_AT_START)))
 	{
 		tkz->flags |= TKZ_FLAG_UNEXPECTED_EOF;
 		error = TKZ_SUCCESS;
