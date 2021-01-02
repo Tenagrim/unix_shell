@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:19 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/29 17:36:11 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/02 21:59:23 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,8 +342,6 @@ int		rechange_error(t_super *sp, int remains, int error)
 		error = SUP_ERROR_INVALID_PIPE_SYNTAX;
 	else
 		error = SUP_SUCCESS;
-	if (error == SUP_SUCCESS && sp->tkz_error == TKZ_ERROR_BUFFER_REMAINS)
-		error = TKZ_ERROR_BUFFER_REMAINS;
 	return (error);
 }
 
@@ -366,8 +364,6 @@ int		make_super(t_super *sp)
 	sp->current_token = 0;
 	error = tkz_make(sp->tkz);
 	sp->tkz_error = error;
-	if (error == TKZ_ERROR_BUFFER_REMAINS)
-		error = SUP_SUCCESS;
 	if (tkz_is_error(error) && !(error == TKZ_ERROR_UNISTD_READ_EOF &&
 			sp->tkz->tkn_count != 0))
 		return (error);

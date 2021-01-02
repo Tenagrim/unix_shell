@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/02 21:50:29 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/02 22:00:00 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,6 @@ t_cchar	*tkz_error_str(int error)
 		return ("unistd read eof");
 	else if (error == TKZ_ERROR_MALLOC_NULL_RETURN)
 		return ("malloc null return");
-	else if (error == TKZ_ERROR_BUFFER_REMAINS)
-		return ("buffer remains");
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_NORMAL_ESCAPE)
 		return ("contract is terminated for backslash normal escape");
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_DQUOTE_ESCAPE)
@@ -426,6 +424,7 @@ int		tkz_subprocessor_normal_escape(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
 	char	c;
 	int		error;
+	(void)tkz;
 
 	if (tkz_buffer_view_char(buf, 0) != '\\')
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_NORMAL_ESCAPE);
@@ -444,6 +443,7 @@ int		tkz_subprocessor_dquote_escape(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
 	char	c;
 	int		error;
+	(void)tkz;
 
 	if (tkz_buffer_view_char(buf, 0) != '\\')
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_DQUOTE_ESCAPE);
@@ -632,6 +632,7 @@ int		tkz_token_continue_condition(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
 	char	c;
 	int		condition;
+	(void)tkn;
 
 	condition = 1;
 	c = tkz_buffer_view_char(buf, 0);
@@ -697,8 +698,6 @@ int		tkz_make(t_tkz *tkz)
 	}
 	tkz_buffer_full_skip_endcommand(&tkz->buf);
 	tkz_remove_last_empty_tokens(tkz);
-	if (!tkz_is_error(error) && tkz->buf.len > 0)
-		error = TKZ_ERROR_BUFFER_REMAINS;
 	return (error);
 }
 
