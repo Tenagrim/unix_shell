@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:11:05 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/29 17:40:25 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/02 21:48:14 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ t_tkz			*tkz_init(void);
 void			tkz_change_input_fd(t_tkz *tkz, int fd);
 int				tkz_make(t_tkz *tkz);
 void			tkz_free(t_tkz **tkz);
+
+int				tkz_is_command_buffered(t_tkz *tkz);
 
 int				tkz_is_error(int value);
 const char		*tkz_error_str(int value);

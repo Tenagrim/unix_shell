@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 18:28:36 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/02 21:50:56 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,21 @@ int		main(int ac, char **av, char **env)
 	env_t = init_env();
 	merge_env_native(env_t, env);
 
-	while (err == 1 || err == -6)
+	while (1)
 	{
-		if (err != -6)
+		if (!tkz_is_command_buffered(super->tkz))
 			write_prompt();
 		err =  make_super(super);
+//		print_super(super);
+//		tkz_print(super->tkz);
 
-		//print_super(super);
-		exec_commands(super, env_t);
-		//free_super(&super);
+		if (is_super_error(err))
+			printf("minishell: %s\n", super_error_str(err));
+		else
+			exec_commands(super, env_t);
 		//ft_printf("%d -------\n",err);
 	}
+
+	free_super(&super);
+	free_env(&env_t);
 }
