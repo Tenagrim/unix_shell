@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:11:05 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/02 21:58:28 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/02 22:26:11 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct	s_tokenizer
 	t_token		*tkn;
 
 	unsigned	state;
+	int			flags;
 
 	t_tkz_buf	buf;
 
@@ -54,6 +55,8 @@ typedef struct	s_tokenizer
 	t_tkz_env_get			env_get;
 	t_tkz_last_exit_code	last_exit_code;
 }				t_tkz;
+
+# define TKZ_FLAG_UNEXPECTED_EOF (1 << 0)
 
 # define TKZ_SUCCESS (1)
 # define TKZ_ERROR (-1)
@@ -79,6 +82,7 @@ int				tkz_make(t_tkz *tkz);
 void			tkz_free(t_tkz **tkz);
 
 int				tkz_is_command_buffered(t_tkz *tkz);
+int				tkz_check_flag(t_tkz *tkz, int flag);
 
 int				tkz_is_error(int value);
 const char		*tkz_error_str(int value);

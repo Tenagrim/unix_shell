@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   write_prompt.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/29 14:22:36 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 19:02:25 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/02 22:07:37 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	write_prompt(void)
 {
 	char	prompt[301];
 	char	*prompt_2;
+	(void)prompt;
 
 	prompt_2 = "minishell: ";
 	write(2, prompt_2, ft_strlen(prompt_2));

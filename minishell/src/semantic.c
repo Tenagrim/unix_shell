@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:19 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/02 21:59:23 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/02 22:28:35 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,8 +364,7 @@ int		make_super(t_super *sp)
 	sp->current_token = 0;
 	error = tkz_make(sp->tkz);
 	sp->tkz_error = error;
-	if (tkz_is_error(error) && !(error == TKZ_ERROR_UNISTD_READ_EOF &&
-			sp->tkz->tkn_count != 0))
+	if (tkz_is_error(error))
 		return (error);
 	if (is_super_error((error = make_super_program(sp, &sp->programs[sp->count++], &remains))))
 		delete_last_program(sp);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_commands.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 20:44:44 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/02 22:06:49 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,17 @@ static int	free_pipes(int **pipes, int ret)
 
 int			exit_biultin(char *const argv[], t_env *env)
 {
+	(void)argv;
+	(void)env;
 	print_error("exit\n");
-	exit(0);	
+	exit(0);
 }
 
 int			echo_biultin(char *const argv[], t_env *env)
 {
 	char	min_n;
 	int		i;
+	(void)env;
 
 	i = 1;
 	min_n = 0;
@@ -97,6 +100,7 @@ int			cd_biultin(char *const argv[], t_env *env)
 
 int			env_biultin(char *const argv[], t_env *env)
 {
+	(void)argv, (void)env;
 	print_env(env);
 	return (0);
 }
@@ -134,11 +138,12 @@ int			unset_biultin(char *const argv[], t_env *env)
 
 int			pwd_biultin(char *const argv[], t_env *env)
 {
+	(void)argv, (void)env;
 	char	path[500];
 	if (getcwd(path, 500))
 		write(1, path, ft_strlen(path));
 	write(1, "\n", 1);
-	return (0);	
+	return (0);
 }
 
 int			(*get_exec_func(char *name))(char *const argv[], t_env *env)

@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/02 22:00:00 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/02 22:27:31 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,9 +194,7 @@ int		tkz_read_buffer(t_tkz_buf *buf)
 		if (ret < 0)
 			return (TKZ_ERROR_UNISTD_READ_NEGATIVE_RETURN);
 		if (ret == 0)
-		{
 			return (TKZ_ERROR_UNISTD_READ_EOF);
-		}
 		buf->len += ret;
 	}
 	return (TKZ_SUCCESS);
@@ -688,6 +686,7 @@ int		tkz_make(t_tkz *tkz)
 	int		error;
 
 	tkz_free_tokens(tkz);
+	tkz->flags = 0;
 	error = tkz_make_token(tkz, tkz->tkn_count++, &remains);
 	while (!tkz_is_error(error) && remains)
 	{
@@ -698,6 +697,12 @@ int		tkz_make(t_tkz *tkz)
 	}
 	tkz_buffer_full_skip_endcommand(&tkz->buf);
 	tkz_remove_last_empty_tokens(tkz);
+	if (tkz_is_error(error) && (error == TKZ_ERROR_UNISTD_READ_EOF &&
+			tkz->tkn_count != 0))
+	{
+		tkz->flags |= TKZ_FLAG_UNEXPECTED_EOF;
+		error = TKZ_SUCCESS;
+	}
 	return (error);
 }
 
@@ -716,6 +721,11 @@ int		tkz_is_command_buffered(t_tkz *tkz)
 	tkz->buf.start = prev_start;
 	tkz->buf.len = prev_len;
 	return (result);
+}
+
+int		tkz_check_flags(t_tkz *tkz, int flags)
+{
+	return (tkz->flags & flags);
 }
 
 void	tkz_print_buf(t_tkz_buf *buf)
