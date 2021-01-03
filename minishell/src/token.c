@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 14:15:01 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 14:33:14 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,9 +364,6 @@ int		tkz_subprocessor_exit_code(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	int		exit_code;
 	int		error;
 
-	if (tkz_buffer_view_char(buf, 0) != '$')
-		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_DOLLAR_SYMBOL);
-	tkz_buffer_increment(buf, 1);
 	if (tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
 		return (error);
 	if (tkz_buffer_view_char(buf, 0) != '?')
@@ -382,23 +379,16 @@ int		tkz_subprocessor_exit_code(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 
 int		tkz_subprocessor_env(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
-	char	c;
 	int		error;
 	char	*value;
 	t_token	name;
 
-	if (tkz_buffer_view_char(buf, 0) != '$')
-		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_DOLLAR_SYMBOL);
-	tkz_buffer_increment(buf, 1);
 	tkz_init_token(&name);
 	error = TKZ_SUCCESS;
 	while (!tkz_is_error(error) &&
 		!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))) &&
 		tkz_is_identifier(tkz_buffer_view_char(buf, 0), !name.len))
 		error = tkz_token_move_char_from_buffer(&name, buf);
-	c = tkz_buffer_view_char(buf, 0);
-	if (!tkz_is_error(error) && !name.len && !tkz_is_word(c))
-		tkz_write_token_str(tkn, "$", 1);
 	if (!tkz_is_error(error))
 		if (name.len && !tkz_is_error((error =
 				tkz_write_token_str(&name, "", 1))))
@@ -415,14 +405,17 @@ int		tkz_subprocessor_dollar(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 
 	if (tkz_buffer_view_char(buf, 0) != '$')
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_DOLLAR_SYMBOL);
-	error = tkz_prefetch_buffer(buf, 2);
+	tkz_buffer_increment(buf, 1);
+	error = tkz_prefetch_buffer(buf, 1);
 	if (!tkz_is_error(error))
 	{
-		c = tkz_buffer_view_char(buf, 1);
+		c = tkz_buffer_view_char(buf, 0);
 		if (c == '?')
 			error = tkz_subprocessor_exit_code(tkz, tkn, buf);
-		else
+		else if (tkz_is_identifier(c, 1))
 			error = tkz_subprocessor_env(tkz, tkn, buf);
+		else if (!tkz_is_word(c))
+			error = tkz_write_token_str(tkn, "$", 1);
 	}
 	return (error);
 }
