@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 14:33:14 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 16:58:19 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ int		tkz_read_buffer(t_tkz_buf *buf)
 	if (buf->len > 0 && buf->start > 0)
 		tkz_memcpy(buf->mem, buf->mem + buf->start, buf->len);
 	buf->start = 0;
-	if (buf->len < BUFFER_SIZE)
+	if (buf->len < BUFFER_SIZE && buf->fd >= 0)
 	{
 		ret = read(buf->fd, buf->mem + buf->len, BUFFER_SIZE - buf->len);
 		if (ret < 0)
@@ -205,7 +205,7 @@ int		tkz_read_buffer(t_tkz_buf *buf)
 			return (TKZ_ERROR_UNISTD_READ_EOF);
 		buf->len += ret;
 	}
-	return (TKZ_SUCCESS);
+	return (buf->fd >= 0 ? TKZ_SUCCESS : TKZ_ERROR_INVALID_FD);
 }
 
 void	tkz_init_token(t_token *tkn)
@@ -684,6 +684,16 @@ void	tkz_remove_last_empty_tokens(t_tkz *tkz)
 	}
 }
 
+void	tkz_remove_last_token(t_tkz *tkz)
+{
+	if (tkz->tkn_count - 1 >= 0)
+	{
+		if (tkz->tkn[tkz->tkn_count - 1].mem)
+			free(tkz->tkn[tkz->tkn_count - 1].mem);
+		tkz->tkn_count -= 1;
+	}
+}
+
 int		tkz_make(t_tkz *tkz)
 {
 	int		remains;
@@ -691,7 +701,8 @@ int		tkz_make(t_tkz *tkz)
 
 	tkz_free_tokens(tkz);
 	tkz->flags = 0;
-	error = tkz_make_token(tkz, tkz->tkn_count++, &remains);
+	if (tkz_is_error((error = tkz_make_token(tkz, tkz->tkn_count++, &remains))))
+		tkz_remove_last_token(tkz);
 	while (!tkz_is_error(error) && remains)
 	{
 		if (tkz->tkn_count >= tkz->tkn_cap)
@@ -700,7 +711,8 @@ int		tkz_make(t_tkz *tkz)
 		error = tkz_make_token(tkz, tkz->tkn_count++, &remains);
 	}
 	tkz_buffer_full_skip_endcommand(&tkz->buf);
-	tkz_remove_last_empty_tokens(tkz);
+	if (tkz->tkn_count == 1 && tkz->tkn->len == 0)
+		tkz_remove_last_token(tkz);
 	if (tkz_is_error(error) && (error == TKZ_ERROR_UNISTD_READ_EOF &&
 			(tkz->tkn_count != 0 || tkz->flags & TKZ_FLAG_WS_AT_START)))
 	{
@@ -724,7 +736,7 @@ int		tkz_is_command_buffered(t_tkz *tkz)
 	result = tkz_is_endcommand(c);
 	tkz->buf.start = prev_start;
 	tkz->buf.len = prev_len;
-	return (result);
+	return (tkz->buf.fd >= 0 ? result : 1);
 }
 
 int		tkz_check_flags(t_tkz *tkz, int flags)

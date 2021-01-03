@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 15:19:58 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 16:50:19 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,16 @@ int		main(int ac, char **av, char **env)
 	super->tkz->last_exit_code = get_last_code;
 	super->tkz->data = env_t;
 
+	if (ac == 3 && !ft_strcmp(av[1], "-c"))
+	{
+		int		len = strlen(av[2]);
+		memcpy(super->tkz->buf.mem, av[2], len);
+		super->tkz->buf.mem[len++] = '\n';
+		super->tkz->buf.start = 0;
+		super->tkz->buf.len = len;
+		super->tkz->buf.fd = -1;
+	}
+
 	while (1)
 	{
 		if (!tkz_is_command_buffered(super->tkz))
@@ -51,7 +61,7 @@ int		main(int ac, char **av, char **env)
 		err =  make_super(super);
 		// print_super(super);
 		// tkz_print(super->tkz);
-		if (err == TKZ_ERROR_UNISTD_READ_EOF)
+		if (err == TKZ_ERROR_UNISTD_READ_EOF || err == TKZ_ERROR_INVALID_FD)
 			break ;
 		if (tkz_check_flags(super->tkz, TKZ_FLAG_UNEXPECTED_EOF))
 			write(2, "\n", 1);
@@ -64,6 +74,9 @@ int		main(int ac, char **av, char **env)
 		//ft_printf("%d -------\n",err);
 	}
 
+	int last_code = env_t->last_code;
 	free_super(&super);
 	free_env(&env_t);
+
+	return (last_code);
 }

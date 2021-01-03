@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:19 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/02 22:28:35 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 16:57:24 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int		is_token_pipe(t_token *tkn)
 
 int		is_token_argument(t_token *tkn)
 {
-	return (tkn->len > 0 && !is_token_redirect(tkn) && !is_token_pipe(tkn));
+	return (!is_token_redirect(tkn) && !is_token_pipe(tkn));
 }
 
 t_token	*get_current_token(t_super *sp)
