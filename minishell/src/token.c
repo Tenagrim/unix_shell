@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 13:59:20 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 14:15:01 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -396,6 +396,7 @@ int		tkz_subprocessor_env(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 		!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))) &&
 		tkz_is_identifier(tkz_buffer_view_char(buf, 0), !name.len))
 		error = tkz_token_move_char_from_buffer(&name, buf);
+	c = tkz_buffer_view_char(buf, 0);
 	if (!tkz_is_error(error) && !name.len && !tkz_is_word(c))
 		tkz_write_token_str(tkn, "$", 1);
 	if (!tkz_is_error(error))
