@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:31:55 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 14:27:28 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 14:56:18 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,10 @@ int				export_biultin(char *const argv[], t_env *env)
 	while (ret &&  argv[i])
 	{
 
-		ret = check_identifier(argv[i]);
-		if (!ret)
+		if (!check_identifier(argv[i]))
 		{
 			print_error3("export", argv[i], "not a valid identifier");
-			break ;
+			continue ;
 		}
 		ret = add_env_variable_expr(env, argv[i], ft_strlen(argv[i]));
 		if (!ret)
