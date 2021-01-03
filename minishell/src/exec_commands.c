@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 12:36:51 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 12:56:30 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,6 @@ int			unset_biultin(char *const argv[], t_env *env)
 		remove_env_variable(env, argv[i], ft_strlen(argv[i]));
 		i++;
 	}
-
 	return (0);
 }
 
@@ -192,6 +191,7 @@ int		exec_commands(t_super *progs, t_env *env)
 		exec_func = get_exec_func(exec_path);
 		if (!exec_func && !(replace_exec_path(&exec_path, env)))
 		{
+			print_error2("command not found", exec_path);
 			ft_printf("minishell: %s: command not found\n", exec_path); //FIXME to stderr
 			free(exec_path);
 			return (free_pipes(pipes, 1));

@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 14:53:04 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 20:13:25 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 13:16:36 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,20 @@ int		exec_redirected(int (*exec_func)(char *const argv[], t_env *env),char *exec
 	}
 	wait(&status);
 	close_fds(fds);
-	sig =  WTERMSIG(status);
+	sig = WTERMSIG(status);
+	ret = WEXITSTATUS(status);
+	env->last_code = ret;
+	//ft_printf("exited: [%d] status: [%d]\n", ret, status);
 	if (sig == 3)
+	{
+		env->last_code = 131;
 		print_error("Quit: 3\n");
+	}
 	if (sig == 2)
+	{
+		env->last_code = 130;
 		write(2, "\n", 1);
+	}
  	signal(2, signal_handler);
 	signal(3, signal_handler);
 	return (status);

@@ -11,9 +11,10 @@ typedef	struct	s_entry {
 }				t_var;
 
 typedef struct	s_environment {
-	int			var_cap;
-	int			var_count;
-	t_var		*var;
+	int				var_cap;
+	int				var_count;
+	unsigned char	last_code;
+	t_var			*var;
 
 }				t_env;
 
@@ -26,6 +27,7 @@ void	remove_env_variable(t_env *env, char *key, int klen);
 int		find_env_variable(t_env *env, char *key, int klen);
 int		find_env_variable_cb(t_env *env, char *key, char **value_canbenull);
 int		find_env_variable_cb_static(t_env *env, char *key, char **value_canbenull);
+int		get_last_code(void *data, int *exit_code);
 
 char	**gen_native_env(t_env *env);
 void	free_env_native(char **native);
