@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:31:24 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 14:32:24 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 16:55:53 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string.h>
 # include <semantic.h>
 # include <env.h>
+# include <exec_args.h>
 
 #include <stdio.h>
 
@@ -45,7 +46,8 @@ int		find_file_in_dir(char *dir_name, char *file);
 ** return must be freed
 */
 char	*find_path(char *path, char *name);
-int		exec_redirected(int (*exec_func)(char *const argv[], t_env *env),char *exec_path, char **av, int *fds, t_env *env);
+int		exec_redirected(t_exec_args *a, t_env *env);
+//int		exec_redirected(int (*exec_func)(char *const argv[], t_env *env),char *exec_path, char **av, int *fds, t_env *env);
 int		exec_commands(t_super *progs, t_env *env);
 int		exec_command(char **av, char **env);
 char	**copy_env(char **env);
