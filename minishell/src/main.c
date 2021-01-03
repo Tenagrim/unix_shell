@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 16:50:19 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 18:59:47 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,23 @@ int		find_by_path(char *name)
 	return (( ret == 0) ? 1 : 0);
 }
 */
+
+static int	inc_shlvl(t_env *env)
+{
+	int		shlvl;
+	char	*tmp;
+
+	if (!find_env_variable_cb_static(env, "SHLVL", &tmp))
+		return (0);
+	shlvl = ft_atoi(tmp);
+	ft_printf("shlvl: %d\n", shlvl);
+	shlvl++;
+	tmp = ft_itoa(shlvl);
+	ft_printf("shlvl: %s\n", tmp);
+	replace_env_variable(env, "SHLVL", tmp);
+	return (1);
+}
+
 int		main(int ac, char **av, char **env)
 {
 	t_super		*super;
@@ -43,7 +60,7 @@ int		main(int ac, char **av, char **env)
 	super->tkz->env_get = find_env_variable_cb_static;
 	super->tkz->last_exit_code = get_last_code;
 	super->tkz->data = env_t;
-
+	inc_shlvl(env_t);
 	if (ac == 3 && !ft_strcmp(av[1], "-c"))
 	{
 		int		len = strlen(av[2]);

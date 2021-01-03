@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:35:21 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 14:35:23 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 18:45:34 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int			cd_biultin(char *const argv[], t_env *env)
 {
 	int		ret;
 	char	*home;
+	char	*pwd;
 
 	ret = 1;
 	if (!argv[1])
