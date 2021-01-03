@@ -307,7 +307,7 @@ void	print_env(t_env *env) {
 	i = 0;
 	while (i < env->var_count) {
 		var = &env->var[i];
-		printf("%2d: %.*s=%.*s\n", i, var->key_len, var->key, var->value_len, var->value);
+		printf("%.*s=%.*s\n", var->key_len, var->key, var->value_len, var->value);
 		i += 1;
 	}
 }

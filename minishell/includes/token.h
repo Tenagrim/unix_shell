@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:11:05 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/02 22:51:09 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 11:48:07 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ typedef struct	s_tokenizer
 # define TKZ_ERROR_UNISTD_READ_NEGATIVE_RETURN (-3)
 # define TKZ_ERROR_UNISTD_READ_EOF (-4)
 # define TKZ_ERROR_MALLOC_NULL_RETURN (-5)
+# define TKZ_ERROR_INVALID_DOLLAR_SYNTAX (-6)
 
 /*
 ** internal errors (indicates bugs in library)

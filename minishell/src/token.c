@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/02 23:10:45 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 11:56:27 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int		tkz_is_quote(char c)
 
 int		tkz_is_control(char c)
 {
-	return (c == '$' ||	c == '|' || c == '<' || c == '>');
+	return (c == '|' || c == '<' || c == '>');
 }
 
 int		tkz_is_word(char c)
@@ -361,7 +361,7 @@ int		tkz_subprocessor_exit_code(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	tkz_buffer_increment(buf, 1);
 	if (tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
 		return (error);
-	if (tkz_buffer_view_char(buf, 1) != '?')
+	if (tkz_buffer_view_char(buf, 0) != '?')
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_QUATION_MARK_SYMBOL);
 	tkz_buffer_increment(buf, 1);
 	numbuf[0] = '0';
@@ -404,16 +404,20 @@ int		tkz_subprocessor_env(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 int		tkz_subprocessor_dollar(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
 	int		error;
+	char	c;
 
 	if (tkz_buffer_view_char(buf, 0) != '$')
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_DOLLAR_SYMBOL);
 	error = tkz_prefetch_buffer(buf, 2);
 	if (!tkz_is_error(error))
 	{
-		if (tkz_buffer_view_char(buf, 1) == '?')
+		c = tkz_buffer_view_char(buf, 1);
+		if (c == '?')
 			error = tkz_subprocessor_exit_code(tkz, tkn, buf);
-		else
+		else if (tkz_is_word(c))
 			error = tkz_subprocessor_env(tkz, tkn, buf);
+		else
+			error = TKZ_ERROR_INVALID_DOLLAR_SYNTAX;
 	}
 	return (error);
 }
