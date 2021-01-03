@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 19:02:23 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 19:12:12 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,7 @@ int		find_by_path(char *name)
 }
 */
 
-static int	inc_shlvl(t_env *env)
-{
-	int		shlvl;
-	char	*tmp;
 
-	if (!find_env_variable_cb_static(env, "SHLVL", &tmp))
-		return (0);
-	shlvl = ft_atoi(tmp);
-	ft_printf("shlvl: %d\n", shlvl);
-	shlvl++;
-	tmp = ft_itoa(shlvl);
-	ft_printf("shlvl: %s\n", tmp);
-	replace_env_variable(env, "SHLVL", tmp);
-	return (1);
-}
 
 int		main(int ac, char **av, char **env)
 {

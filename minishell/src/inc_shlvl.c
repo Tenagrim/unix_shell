@@ -1,37 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   replace_env_variable.c                             :+:      :+:    :+:   */
+/*   inc_shlvl.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/03 18:35:33 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 19:09:08 by gshona           ###   ########.fr       */
+/*   Created: 2021/01/03 19:11:07 by gshona            #+#    #+#             */
+/*   Updated: 2021/01/03 19:25:41 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <env.h>
-#include <libft.h>
+#include <minishell.h>
 
-int	replace_env_variable(t_env *env, char *key, char *replace)
+int	inc_shlvl(t_env *env)
 {
-	t_var	*p;
-	int		i;
-	int		res;
+	int		shlvl;
+	char	*tmp;
 
-	i = 0;
-	res = 0;
-	while (!res && i < env->var_count)
-	{
-		p = &(env->var[i]);
-		if (!ft_strcmp(key, p->key))
-		{
-			free(p->value);
-			p->value = replace;
-			p->value_len = ft_strlen(replace);
-			res = 1;
-		}
-		i++;
-	}
-	return (res);
+	if (!find_env_variable_cb_static(env, "SHLVL", &tmp))
+		return (0);
+	shlvl = ft_atoi(tmp) + 1;
+	tmp = ft_itoa(shlvl);
+	replace_env_variable(env, "SHLVL", tmp);
+	return (1);
 }
