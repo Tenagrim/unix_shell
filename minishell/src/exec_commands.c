@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 12:56:30 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 14:03:20 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,120 +30,9 @@ static int	free_pipes(int **pipes, int ret)
 	return (ret);
 }
 
-int			exit_biultin(char *const argv[], t_env *env)
-{
-	(void)argv;
-	(void)env;
-	print_error("exit\n");
-	exit(0);
-}
 
-int			echo_biultin(char *const argv[], t_env *env)
-{
-	char	min_n;
-	int		i;
-	(void)env;
 
-	i = 1;
-	min_n = 0;
-	if (argv[1] && !ft_strcmp("-n", argv[1]))
-	{
-		i++;
-		min_n = 1;
-	}
-	while (argv[i])
-	{
-		write(1, argv[i], ft_strlen(argv[i]));
-		write(1, " ", 1);
-		i++;
-	}
-	if (!min_n)
-		write(1, "\n", 1);
-	return (0);
-}
 
-static	void	print_error2(char *error, char  *str)
-{
-	write(2, "minishell: ", 11);
-	write(2, str, ft_strlen(str));
-	write(2, ": ", 2);
-	write(2, error, ft_strlen(error));
-	write(2, "\n", 1);
-}
-
-int			cd_biultin(char *const argv[], t_env *env)
-{
-	int		ret;
-	char	*home;
-
-	ret = 1;
-	if (!argv[1])
-	{
-		if (!find_env_variable_cb(env, "HOME", &home))
-			{
-				print_error("minishell: cd: HOME not set\n");
-				return (1);
-			}
-		ret = chdir(home);
-	}
-	else if (!is_dir(argv[1]))
-	{
-		print_error2("Not a directory", argv[1]);
-		exit(1);
-	}
-	else
-		ret = chdir(argv[1]);
-	if (ret)
-		print_error("ERROR CD\n");
-	return ((ret == 0) ? 0 : 1);
-}
-
-int			env_biultin(char *const argv[], t_env *env)
-{
-	(void)argv, (void)env;
-	print_env(env);
-	return (0);
-}
-
-int			export_biultin(char *const argv[], t_env *env)
-{
-	int i;
-	int ret;
-
-	i = 1;
-	ret = 1;
-	while (ret &&  argv[i])
-	{
-		ret = add_env_variable_expr(env, argv[i], ft_strlen(argv[i]));
-		if (!ret)
-			print_error("minishell: bad assignment\n");
-		i++;
-	}
-	return (!ret);
-}
-
-int			unset_biultin(char *const argv[], t_env *env)
-{
-	int i;
-
-	i = 1;
-	while (argv[i])
-	{
-		remove_env_variable(env, argv[i], ft_strlen(argv[i]));
-		i++;
-	}
-	return (0);
-}
-
-int			pwd_biultin(char *const argv[], t_env *env)
-{
-	(void)argv, (void)env;
-	char	path[500];
-	if (getcwd(path, 500))
-		write(1, path, ft_strlen(path));
-	write(1, "\n", 1);
-	return (0);
-}
 
 int			(*get_exec_func(char *name))(char *const argv[], t_env *env)
 {
@@ -192,7 +81,7 @@ int		exec_commands(t_super *progs, t_env *env)
 		if (!exec_func && !(replace_exec_path(&exec_path, env)))
 		{
 			print_error2("command not found", exec_path);
-			ft_printf("minishell: %s: command not found\n", exec_path); //FIXME to stderr
+			//ft_printf("minishell: %s: command not found\n", exec_path); //FIXME to stderr
 			free(exec_path);
 			return (free_pipes(pipes, 1));
 		}
