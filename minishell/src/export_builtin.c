@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:31:55 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 14:56:18 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 18:51:47 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int				export_biultin(char *const argv[], t_env *env)
 			print_error3("export", argv[i], "not a valid identifier");
 			continue ;
 		}
-		ret = add_env_variable_expr(env, argv[i], ft_strlen(argv[i]));
+		ret = add_env_variable_expr(env, argv[i]);
 		if (!ret)
 			print_error("minishell: bad assignment\n");
 		i++;

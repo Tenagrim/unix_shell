@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 18:59:47 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 19:02:23 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,11 @@ int		main(int ac, char **av, char **env)
 		// tkz_print(super->tkz);
 		if (err == TKZ_ERROR_UNISTD_READ_EOF || err == TKZ_ERROR_INVALID_FD)
 			break ;
+		if (tkz_check_flags(super->tkz, TKZ_FLAG_QUOTE_NL_END))
+		{
+			env_t->last_code = 2;
+			break ;
+		}
 		if (tkz_check_flags(super->tkz, TKZ_FLAG_UNEXPECTED_EOF))
 			write(2, "\n", 1);
 			//printf("\n");
@@ -90,6 +95,9 @@ int		main(int ac, char **av, char **env)
 			exec_commands(super, env_t);
 		//ft_printf("%d -------\n",err);
 	}
+
+	if (ac == 1)
+		write(2, "exit\n", 5);
 
 	int last_code = env_t->last_code;
 	free_super(&super);
