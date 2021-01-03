@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 14:53:04 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 14:39:19 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 15:22:57 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,7 @@ int		exec_redirected(int (*exec_func)(char *const argv[], t_env *env),char *exec
 	}
  	signal(2, signal_handler);
 	signal(3, signal_handler);
+	//int t_fd = open ("ttt", O_, O_CREAT);
+	ft_printf("{{%d}}\n", t_fd);
 	return (status);
 }

@@ -1,0 +1,3 @@
+[submodule "minishell_test"]
+	path = minishell_test
+	url = https://github.com/cacharle/minishell_test.git
