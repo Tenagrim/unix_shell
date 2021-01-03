@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 13:00:32 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 13:08:19 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,12 @@ int		tkz_is_word(char c)
 {
 	return (!tkz_is_endcommand(c) && !tkz_is_wp(c) && !tkz_is_control(c) &&
 			!tkz_is_quote(c) && c != '$');
+}
+
+int		tkz_is_identifier(char c, int is_begin)
+{
+	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
+		(!is_begin && c >= '0' && c <= '9'));
 }
 
 void	tkz_memcpy(void *l, void *r, int size)
@@ -390,7 +396,7 @@ int		tkz_subprocessor_env(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 		!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
 	{
 		c = tkz_buffer_view_char(buf, 0);
-		if (!tkz_is_word(c))
+		if (!tkz_is_identifier(c, !name.len))
 			break ;
 		error = tkz_token_move_char_from_buffer(&name, buf);
 	}
