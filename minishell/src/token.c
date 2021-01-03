@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 12:00:18 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 12:23:09 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -655,7 +655,7 @@ int		tkz_make_token(t_tkz *tkz, int i_tkn, int *remains)
 	tkz_init_token(tkn);
 	error = tkz_skip_whitespaces_with_prefetching(tkz);
 	tkz->state = STATE_NORMAL;
-	condition = tkz_token_continue_condition(tkz, tkn, &tkz->buf);
+	condition = 1;
 	while (!tkz_is_error(error) && condition)
 	{
 		do {
