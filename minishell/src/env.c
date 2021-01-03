@@ -328,11 +328,14 @@ int		merge_env_native(t_env *env, char **native) {
 void	print_env(t_env *env) {
 	int		i;
 	t_var	*var;
+	char	buf[1024];
 
 	i = 0;
 	while (i < env->var_count) {
 		var = &env->var[i];
-		printf("%.*s=%.*s\n", var->key_len, var->key, var->value_len, var->value);
+		int ret = snprintf(buf, sizeof(buf) - 1,"%.*s=%.*s\n", var->key_len, var->key, var->value_len, var->value);
+		buf[ret] = 0;
+		write(1, buf, ret);
 		i += 1;
 	}
 }
