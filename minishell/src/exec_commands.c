@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/02 22:06:49 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 12:36:51 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int			echo_biultin(char *const argv[], t_env *env)
 
 	i = 1;
 	min_n = 0;
-	if (!ft_strcmp("-n", argv[1]))
+	if (argv[1] && !ft_strcmp("-n", argv[1]))
 	{
 		i++;
 		min_n = 1;
