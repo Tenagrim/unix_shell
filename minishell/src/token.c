@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 12:23:09 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 12:27:02 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ t_cchar	*tkz_error_str(int error)
 		return ("unistd read eof");
 	else if (error == TKZ_ERROR_MALLOC_NULL_RETURN)
 		return ("malloc null return");
+	else if (error == TKZ_ERROR_INVALID_DOLLAR_SYNTAX)
+		return ("invalid dollar syntax");
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_NORMAL_ESCAPE)
 		return ("contract is terminated for backslash normal escape");
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_DQUOTE_ESCAPE)
