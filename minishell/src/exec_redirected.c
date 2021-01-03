@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 14:53:04 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 13:16:36 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 14:39:19 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,22 @@ static void		dup_fds(int *fds)
 		dup2(fds[1], 1);
 }
 
-//int				exec_redirected(char *exec_path, char **av, int *fds, char **env)
+static int	exec_builtin(int (*exec_func)(char *const argv[], t_env *env), char **av, int *fds, t_env *env)
+{
+	int		o_fds[2];
+	int		ret;
+	
+	o_fds[0] = dup(0);
+	o_fds[1] = dup(1);
+	dup_fds(fds);
+	ret = exec_func(av, env);
+	close_fds(fds);
+	dup2(o_fds[0], 0);
+	dup2(o_fds[1], 1);
+	env->last_code = (unsigned char)(ret);
+	return (ret);
+}
+
 int		exec_redirected(int (*exec_func)(char *const argv[], t_env *env),char *exec_path, char **av, int *fds, t_env *env)
 {
 	int		pid;
@@ -36,20 +51,10 @@ int		exec_redirected(int (*exec_func)(char *const argv[], t_env *env),char *exec
 	int		ret;
 	int		sig;
 	char	**nat;
-	int		o_fds[2];
 
 	ret = 0;
 	if (exec_func)
-	{
-		o_fds[0] = dup(0);
-		o_fds[1] = dup(1);
-		dup_fds(fds);
-		ret = exec_func(av, env);
-		close_fds(fds);
-		dup2(o_fds[0], 0);
-		dup2(o_fds[1], 1);
-		return (ret);
-	}
+		return (exec_builtin(exec_func, av, fds, env));
 	pid = fork();
  	signal(2, forked_signal_handler);
 	signal(3, forked_signal_handler);

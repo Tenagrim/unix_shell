@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:31:24 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 14:03:22 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 14:32:24 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,17 @@ void	write_prompt(void);
 void	print_error(char *error);
 int		exit_biultin(char *const argv[], t_env *env);
 int		is_dir(char *name);
-int			pwd_biultin(char *const argv[], t_env *env);
-int			export_biultin(char *const argv[], t_env *env);
-int			unset_biultin(char *const argv[], t_env *env);
-int			pwd_biultin(char *const argv[], t_env *env);
-int			env_biultin(char *const argv[], t_env *env);
-int			cd_biultin(char *const argv[], t_env *env);
-int			echo_biultin(char *const argv[], t_env *env);
-int			exit_biultin(char *const argv[], t_env *env);
-void		print_error2(char *error, char  *str);
-void		print_error3(char  *str1, char *str2, char *error);
+int		pwd_biultin(char *const argv[], t_env *env);
+int		export_biultin(char *const argv[], t_env *env);
+int		unset_biultin(char *const argv[], t_env *env);
+int		pwd_biultin(char *const argv[], t_env *env);
+int		env_biultin(char *const argv[], t_env *env);
+int		cd_biultin(char *const argv[], t_env *env);
+int		echo_biultin(char *const argv[], t_env *env);
+int		exit_biultin(char *const argv[], t_env *env);
+void	print_error1(char *error);
+void	print_error2(char *error, char  *str);
+void	print_error3(char  *str1, char *str2, char *error);
+int		(*get_exec_func(char *name))(char *const argv[], t_env *env);
 
 #endif

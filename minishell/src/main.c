@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 13:25:12 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 14:33:11 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 #include <printf.h> //FIXME
 
+/*
 int		find_by_path(char *name)
 {
 	struct	stat buff;
@@ -26,7 +27,7 @@ int		find_by_path(char *name)
 	printf("{{%d}} IFDIR: %d\n", buff.st_mode, buff.st_mode & S_IFDIR);
 	return (( ret == 0) ? 1 : 0);
 }
-
+*/
 int		main(int ac, char **av, char **env)
 {
 	t_super		*super;
@@ -40,7 +41,6 @@ int		main(int ac, char **av, char **env)
 	env_t = init_env();
 	merge_env_native(env_t, env);
 	super->tkz->env_get = find_env_variable_cb_static;
-	super->tkz->last_exit_code = get_last_code;
 	super->tkz->data = env_t;
 
 	while (1)
@@ -53,9 +53,11 @@ int		main(int ac, char **av, char **env)
 		if (err == TKZ_ERROR_UNISTD_READ_EOF)
 			break ;
 		if (tkz_check_flags(super->tkz, TKZ_FLAG_UNEXPECTED_EOF))
-			printf("\n");
+			write(2, "\n", 1);
+			//printf("\n");
 		if (is_super_error(err))
-			printf("minishell: %s\n", super_error_str(err));
+			print_error1(super_error_str(err));
+			//printf("minishell: %s\n", super_error_str(err));
 		else
 			exec_commands(super, env_t);
 		//ft_printf("%d -------\n",err);

@@ -1,0 +1,11 @@
+Makefile
+a.out
+ft_printf
+includes
+libftprintf.a
+minishell
+src
+t_main.c
+test
+tests
+ttt

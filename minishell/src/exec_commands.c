@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 14:03:20 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 14:20:50 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,29 +30,6 @@ static int	free_pipes(int **pipes, int ret)
 	return (ret);
 }
 
-
-
-
-
-int			(*get_exec_func(char *name))(char *const argv[], t_env *env)
-{
-	if (!ft_strcmp("exit", name))
-		return (exit_biultin);
-	if (!ft_strcmp("echo", name))
-		return (echo_biultin);
-	if (!ft_strcmp("cd", name))
-		return (cd_biultin);
-	if (!ft_strcmp("pwd", name))
-		return (pwd_biultin);
-	if (!ft_strcmp("env", name))
-		return (env_biultin);
-	if (!ft_strcmp("export", name))
-		return (export_biultin);
-	if (!ft_strcmp("unset", name))
-		return (unset_biultin);
-	return (NULL);
-}
-
 int		exec_commands(t_super *progs, t_env *env)
 {
 	int			i;
@@ -68,8 +45,6 @@ int		exec_commands(t_super *progs, t_env *env)
 	cur_pipe = 0;
 	i = 0;
 	inp_fd = 0;
-
-
 	while (i < progs->count)
 	{
 		prog = progs->programs + i;
@@ -81,14 +56,10 @@ int		exec_commands(t_super *progs, t_env *env)
 		if (!exec_func && !(replace_exec_path(&exec_path, env)))
 		{
 			print_error2("command not found", exec_path);
-			//ft_printf("minishell: %s: command not found\n", exec_path); //FIXME to stderr
 			free(exec_path);
 			return (free_pipes(pipes, 1));
 		}
-		//printf(">>> exec_path: %s\n", exec_path);
-		//printf(">>> av[0]: %s\n", prog->arguments[0]);
 		cur_pipe = !cur_pipe;
-		//ft_printf("{%d}\n", cur_pipe);
 		if (prog->flags & C_PIPE)
 		{
 			pipe(pipes[cur_pipe]);
@@ -105,10 +76,9 @@ int		exec_commands(t_super *progs, t_env *env)
 			close(pipes[cur_pipe][1]);
 		if (i != 0 && progs->programs[i - 1].flags & C_PIPE && prog->flags & C_LFT_RDR)
 			close(pipes[!cur_pipe][0]);
-		//ft_printf(">>[%s] in: %d  out: %d\n", prog->arguments[0], prog->fd[0], prog->fd[1]);
-		if (prog->fd[0] == -1)
+		if (fds[0] == -1)
 		{
-			ft_printf("minishell: %s: No such file or directory\n", prog->redirect_filename[0]); //FIXME to stderr
+			print_error2("No such file or directory", prog->redirect_filename[0]);
 			return (free_pipes(pipes, 1));
 		}
 		exec_redirected(exec_func, exec_path, prog->arguments, fds, env);
@@ -118,4 +88,3 @@ int		exec_commands(t_super *progs, t_env *env)
 	}
 	return (free_pipes(pipes, 0));
 }
-
