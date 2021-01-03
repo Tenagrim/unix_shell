@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 12:27:02 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 13:00:32 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ int		tkz_is_control(char c)
 int		tkz_is_word(char c)
 {
 	return (!tkz_is_endcommand(c) && !tkz_is_wp(c) && !tkz_is_control(c) &&
-			!tkz_is_quote(c));
+			!tkz_is_quote(c) && c != '$');
 }
 
 void	tkz_memcpy(void *l, void *r, int size)
