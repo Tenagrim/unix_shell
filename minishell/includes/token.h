@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:11:05 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 16:17:49 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 17:36:27 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct	s_tokenizer
 
 # define TKZ_FLAG_UNEXPECTED_EOF (1 << 0)
 # define TKZ_FLAG_WS_AT_START (1 << 1)
+# define TKZ_FLAG_QUOTE_NL_END (1 << 2)
 
 # define TKZ_SUCCESS (1)
 # define TKZ_ERROR (-1)

@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 16:58:19 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 17:53:22 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -450,7 +450,7 @@ int		tkz_subprocessor_dquote_escape(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	if (tkz_is_error((error = tkz_prefetch_buffer(buf, 2))))
 		return (error);
 	c = tkz_buffer_view_char(buf, 1);
-	if (c == '"' || c == '\\' || c == '`' || c == '\n')
+	if (c == '"' || c == '\\' || c == '`' || c == '\n' || c == '$')
 	{
 		if (!tkz_is_error((error = tkz_write_token_str(tkn, &c, 1))))
 			tkz_buffer_increment(buf, 2);
@@ -539,7 +539,11 @@ int		tkz_processor_quote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	{
 		c = tkz_buffer_view_char(buf, 0);
 		if (c == '\'' || c == '\n')
+		{
+			if (c == '\n')
+				tkz->flags |= TKZ_FLAG_QUOTE_NL_END;
 			break ;
+		}
 		error = tkz_token_move_char_from_buffer(tkn, buf);
 	}
 	if (!tkz_is_error(error) && c == '\'')
@@ -565,7 +569,11 @@ int		tkz_processor_dquote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 		if (c == '$')
 			error = tkz_subprocessor_dollar(tkz, tkn, buf);
 		else if (c == '\n' || c == '"')
+		{
+			if (c == '\n')
+				tkz->flags |= TKZ_FLAG_QUOTE_NL_END;
 			break ;
+		}
 		else if (c == '\\')
 			error = tkz_subprocessor_dquote_escape(tkz, tkn, buf);
 		else
@@ -638,7 +646,8 @@ int		tkz_token_continue_condition(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 
 	condition = 1;
 	c = tkz_buffer_view_char(buf, 0);
-	if (!tkz_is_word(c) || tkz->state == STATE_TERMINATE)
+	if (!(!tkz_is_endcommand(c) && !tkz_is_wp(c) && !tkz_is_control(c) &&
+			!tkz_is_quote(c)) || tkz->state == STATE_TERMINATE)
 		condition = 0;
 	return (condition);
 }
@@ -701,8 +710,7 @@ int		tkz_make(t_tkz *tkz)
 
 	tkz_free_tokens(tkz);
 	tkz->flags = 0;
-	if (tkz_is_error((error = tkz_make_token(tkz, tkz->tkn_count++, &remains))))
-		tkz_remove_last_token(tkz);
+	error = tkz_make_token(tkz, tkz->tkn_count++, &remains);
 	while (!tkz_is_error(error) && remains)
 	{
 		if (tkz->tkn_count >= tkz->tkn_cap)
