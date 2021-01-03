@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:11:05 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 11:48:07 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 16:17:49 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define TOKEN_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 64
+#  define BUFFER_SIZE 2048
 # endif
 
 typedef struct	s_token
@@ -66,6 +66,7 @@ typedef struct	s_tokenizer
 # define TKZ_ERROR_UNISTD_READ_EOF (-4)
 # define TKZ_ERROR_MALLOC_NULL_RETURN (-5)
 # define TKZ_ERROR_INVALID_DOLLAR_SYNTAX (-6)
+# define TKZ_ERROR_INVALID_FD (-7)
 
 /*
 ** internal errors (indicates bugs in library)
