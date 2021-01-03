@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 13:08:19 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 13:59:20 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -393,13 +393,11 @@ int		tkz_subprocessor_env(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	tkz_init_token(&name);
 	error = TKZ_SUCCESS;
 	while (!tkz_is_error(error) &&
-		!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
-	{
-		c = tkz_buffer_view_char(buf, 0);
-		if (!tkz_is_identifier(c, !name.len))
-			break ;
+		!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))) &&
+		tkz_is_identifier(tkz_buffer_view_char(buf, 0), !name.len))
 		error = tkz_token_move_char_from_buffer(&name, buf);
-	}
+	if (!tkz_is_error(error) && !name.len && !tkz_is_word(c))
+		tkz_write_token_str(tkn, "$", 1);
 	if (!tkz_is_error(error))
 		if (name.len && !tkz_is_error((error =
 				tkz_write_token_str(&name, "", 1))))
@@ -422,10 +420,8 @@ int		tkz_subprocessor_dollar(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 		c = tkz_buffer_view_char(buf, 1);
 		if (c == '?')
 			error = tkz_subprocessor_exit_code(tkz, tkn, buf);
-		else if (tkz_is_word(c))
-			error = tkz_subprocessor_env(tkz, tkn, buf);
 		else
-			error = TKZ_ERROR_INVALID_DOLLAR_SYNTAX;
+			error = tkz_subprocessor_env(tkz, tkn, buf);
 	}
 	return (error);
 }
