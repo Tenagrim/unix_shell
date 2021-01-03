@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_last_code.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:17:57 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 13:21:52 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 13:25:03 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,5 @@ int		get_last_code(void *data, int *exit_code)
 
 	env = (t_env*)data;
 	*exit_code = env->last_code;
-	return (0);
+	return (1);
 }

@@ -40,6 +40,7 @@ t_env	*init_env(void) {
 
 	env = malloc(sizeof(t_env));
 	if (env) {
+		env->last_code = 0;
 		env->var_cap = 16;
 		env->var_count = 0;
 		env->var = malloc(sizeof(t_var) * env->var_cap);
