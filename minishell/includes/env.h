@@ -25,6 +25,7 @@ int		add_env_variable_expr(t_env *env, char *expr, int len);
 void	remove_env_variable(t_env *env, char *key, int klen);
 int		find_env_variable(t_env *env, char *key, int klen);
 int		find_env_variable_cb(t_env *env, char *key, char **value_canbenull);
+int		find_env_variable_cb_static(t_env *env, char *key, char **value_canbenull);
 
 char	**gen_native_env(t_env *env);
 void	free_env_native(char **native);

@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 11:39:20 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/03 12:00:27 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int		main(int ac, char **av, char **env)
 	super = init_super();
 	env_t = init_env();
 	merge_env_native(env_t, env);
-	super->tkz->env_get = find_env_variable_cb;
+	super->tkz->env_get = find_env_variable_cb_static;
 	super->tkz->data = env_t;
 
 	while (1)

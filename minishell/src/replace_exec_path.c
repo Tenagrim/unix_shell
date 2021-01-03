@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replace_exec_path.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 18:40:01 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/29 18:40:08 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/03 12:03:28 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,9 @@ static char	*get_path_with_env(t_env *env, char *name)
 	char	*path;
 	char	*res;
 
-	if (!find_env_variable_cb(env, "PATH", &path))
+	if (!find_env_variable_cb_static(env, "PATH", &path))
 		return (NULL);
 	res = find_path(path, name);
-	free(path);
 	return (res);
 }
 
@@ -30,7 +29,7 @@ static int		get_command_ex(void *builtin_table, t_env *env, char *name, char **r
 	char	*in_path;
 
 	(void)builtin_table;
-	if (*name == '/' || *name == '.' || ft_strchr(name, '/'))
+	if (ft_strchr(name, '/'))
 	{
 		*res = ft_strdup(name);
 		return (1);

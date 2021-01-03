@@ -243,6 +243,30 @@ int		find_env_variable_cb(t_env *env, char *key, char **value_canbenull) {
 	return (success);
 }
 
+int		find_env_variable_cb_static(t_env *env, char *key, char **value_canbenull) {
+	int		i;
+	int		len;
+	t_var	*var;
+	int		success;
+
+	success = 0;
+	len = 0;
+	while (key[len]) {
+		len += 1;
+	}
+	i = find_env_variable(env, key, len);
+	if (i >= 0) {
+		var = &env->var[i];
+		if (value_canbenull) {
+			*value_canbenull = var->value;
+			success = 1;
+		} else {
+			success = 1;
+		}
+	}
+	return (success);
+}
+
 char	*gen_var_expr(t_var *var) {
 	char	*expr;
 
