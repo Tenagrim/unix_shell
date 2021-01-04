@@ -172,6 +172,8 @@ int		add_env_variable_expr(t_env *env, char *expr) {
 			success = add_env_variable(env, key, expr + key_len + 1);
 		}
 	}
+	else
+		success = 1;
 	return (success);
 }
 
