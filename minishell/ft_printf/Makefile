@@ -14,9 +14,9 @@ SRC_FILES =  	ft_format_output_char.c ft_format_output_digit.c \
 		ft_min.c ft_new_attr.c ft_print_conv.c ft_printf.c \
 		ft_pow.c ft_dtoa.c ft_format_output_float.c \
 		ft_iffloat.c ft_max.c ft_ifptr.c ft_abs.c \
-		ft_format_output_ptr.c ft_str_len.c
+		ft_format_output_ptr.c ft_str_len.c \
 		get_next_line.c \
-		get_next_line_utils.c \
+		get_next_line_utils.c 
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ_FILES = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
 CC= gcc
