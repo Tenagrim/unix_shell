@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:36:10 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/04 13:47:51 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/04 13:59:39 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int			echo_biultin(char *const argv[], t_env *env)
 			write(1, " ", 1);
 		i++;
 	}
-	if (!min_n && f)
+	if ((!min_n && f) || !argv[1])
 		write(1, "\n", 1);
 	return (0);
 }

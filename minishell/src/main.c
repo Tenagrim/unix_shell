@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 19:12:12 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/04 14:17:25 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,29 @@ int		find_by_path(char *name)
 }
 */
 
+int		add_env_pwd(t_env *env)
+{
+	char	*pwd;
 
+	if (find_env_variable(env, "PWD") == -1)
+	{
+		pwd = pwd_function();
+		pwd = (pwd) ? pwd : ft_strdup("very very long path");
+		add_env_variable(env, "PWD", pwd);
+		return (1);
+	}
+	return (0);
+}
+
+t_env		*make_env(char **env_n)
+{
+	t_env	*env;
+
+	env = init_env();
+	merge_env_native(env, env_n);
+	inc_shlvl(env);
+	return (env);
+}
 
 int		main(int ac, char **av, char **env)
 {
@@ -40,13 +62,11 @@ int		main(int ac, char **av, char **env)
  	signal(2, signal_handler);
 	signal(3, signal_handler);
 	err = 1;
+	env_t = make_env(env);
 	super = init_super();
-	env_t = init_env();
-	merge_env_native(env_t, env);
 	super->tkz->env_get = find_env_variable_cb_static;
 	super->tkz->last_exit_code = get_last_code;
 	super->tkz->data = env_t;
-	inc_shlvl(env_t);
 	if (ac == 3 && !ft_strcmp(av[1], "-c"))
 	{
 		int		len = strlen(av[2]);
@@ -66,16 +86,16 @@ int		main(int ac, char **av, char **env)
 		// tkz_print(super->tkz);
 		if (err == TKZ_ERROR_UNISTD_READ_EOF || err == TKZ_ERROR_INVALID_FD)
 			break ;
-		if (tkz_check_flags(super->tkz, TKZ_FLAG_QUOTE_NL_END))
+		if (tkz_check_flags(super->tkz, TKZ_FLAG_QUOTE_NL_END))  //<- flag or flags?
 		{
 			env_t->last_code = 2;
 			break ;
 		}
-		if (tkz_check_flags(super->tkz, TKZ_FLAG_UNEXPECTED_EOF))
+		if (tkz_check_flags(super->tkz, TKZ_FLAG_UNEXPECTED_EOF)) //<- flag or flags?
 			write(2, "\n", 1);
 			//printf("\n");
 		if (is_super_error(err))
-			print_error1(super_error_str(err));
+			print_error1((char*)(super_error_str(err)));
 			//printf("minishell: %s\n", super_error_str(err));
 		else
 			exec_commands(super, env_t);
