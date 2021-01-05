@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/05 19:46:23 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/05 21:16:04 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -511,6 +511,16 @@ int		tkz_subprocessor_env(t_tkz *tkz, t_tkz_buf *buf)
 #endif
 }
 
+int		tkz_strchr(char c, const char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i] && str[i] != c)
+		i += 1;
+	return (str[i] == c);
+}
+
 int		tkz_subprocessor_dollar(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
 	int		error;
@@ -527,7 +537,9 @@ int		tkz_subprocessor_dollar(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 			error = tkz_subprocessor_exit_code(tkz, tkn, buf);
 		else if (tkz_is_identifier(c, 1))
 			error = tkz_subprocessor_env(tkz, buf);
-		else if (!tkz_is_word(c))
+		else if (tkz_strchr(c, "$*-@#_!0123456789"))
+			tkz_buffer_increment(buf, 1);
+		else
 			error = tkz_write_token_str(tkn, "$", 1);
 	}
 	return (error);
@@ -602,8 +614,10 @@ void	tkz_update_state(t_tkz *tkz, t_tkz_buf *buf)
 			tkz->state = STATE_QUOTE;
 		else if (c == '"')
 			tkz->state = STATE_DQUOTE;
-		else
+		else if (tkz_is_word(c) || c == '$')
 			tkz->state = STATE_NORMAL;
+		else
+			tkz->state = STATE_TERMINATE;
 		if (tkz->state == STATE_QUOTE || tkz->state == STATE_DQUOTE)
 			tkz->flags |= TKZ_FLAG_QUOTED;
 	}
@@ -788,6 +802,8 @@ int		tkz_buffer_read_command(t_tkz *tkz, t_tkz_buf *buf)
 		if (buf->len > 0 && tkz_is_wp(tkz_buffer_view_char(buf, 0)))
 			tkz->flags |= TKZ_FLAG_WS_AT_START;
 	}
+	if (!tkz_is_error(error))
+		tkz_buffer_skip_whitespaces(buf);
 	return (error);
 }
 
@@ -795,30 +811,25 @@ int		tkz_make_token(t_tkz *tkz, int i_tkn, int *remains)
 {
 	t_token	*tkn;
 	int		error;
-	int		condition;
 
 	tkn = &tkz->tkn[i_tkn];
 	tkz_init_token(tkn);
 	tkz->state = STATE_NORMAL;
-	condition = 1;
 	error = tkz_buffer_read_command(tkz, &tkz->buf);
-	while (!tkz_is_error(error) && condition)
+	while (!tkz_is_error(error) && tkz->state != STATE_TERMINATE)
 	{
-		do {
-			if (tkz->state == STATE_NORMAL)
-				error = tkz_processor_normal(tkz, tkn, &tkz->buf);
-			if (tkz->state == STATE_QUOTE)
-				error = tkz_processor_quote(tkz, tkn, &tkz->buf);
-			if (tkz->state == STATE_DQUOTE)
-				error = tkz_processor_dquote(tkz, tkn, &tkz->buf);
-			if (tkz->state == STATE_TERMINATE)
-				break ;
-		} while (tkz->state != STATE_NORMAL);
-		if (!tkz_is_error(error))
-			condition = tkz_token_continue_condition(tkz, tkn, &tkz->buf);
+		if (tkz->state == STATE_NORMAL)
+			error = tkz_processor_normal(tkz, tkn, &tkz->buf);
+		if (tkz->state == STATE_QUOTE)
+			error = tkz_processor_quote(tkz, tkn, &tkz->buf);
+		if (tkz->state == STATE_DQUOTE)
+			error = tkz_processor_dquote(tkz, tkn, &tkz->buf);
 	}
+	if (!tkz_is_error(error) && !tkn->len && !(tkz->flags & TKZ_FLAG_QUOTED))
+		tkz->tkn_count -= 1;
 	if (!tkz_is_error(error))
 		*remains = tkz->buf.len > 0 && !tkz_buffer_is_endcommand(&tkz->buf);
+	tkz->flags &= ~TKZ_FLAG_QUOTED;
 	return (error);
 }
 
@@ -858,16 +869,6 @@ int		tkz_make(t_tkz *tkz)
 		error = tkz_make_token(tkz, tkz->tkn_count++, &remains);
 	}
 	tkz_buffer_full_skip_endcommand(&tkz->buf);
-	if (tkz->tkn_count == 1 && tkz->tkn->len == 0)
-		tkz_remove_last_token(tkz);
-#if 0
-	if (tkz_is_error(error) && (error == TKZ_ERROR_UNISTD_READ_EOF &&
-			(tkz->tkn_count != 0 || tkz->flags & TKZ_FLAG_WS_AT_START)))
-	{
-		tkz->flags |= TKZ_FLAG_UNEXPECTED_EOF;
-		error = TKZ_SUCCESS;
-	}
-#endif
 	return (error);
 }
 

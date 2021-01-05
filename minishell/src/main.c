@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/05 19:55:54 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/05 20:58:41 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,6 @@ int		main(int ac, char **av, char **env)
 		// printf ("err: %d\n", err);
 		if (err == TKZ_ERROR_UNISTD_READ_EOF || err == TKZ_ERROR_INVALID_FD)
 			break ;
-		if (tkz_check_flags(super->tkz, TKZ_FLAG_QUOTE_NL_END))
-		{
-			env_t->last_code = 2;
-			break ;
-		}
 		if (tkz_check_flags(super->tkz, TKZ_FLAG_UNEXPECTED_EOF))
 			write(2, "\n", 1);
 			//printf("\n");
@@ -100,6 +95,12 @@ int		main(int ac, char **av, char **env)
 			//printf("minishell: %s\n", super_error_str(err));
 		else
 			exec_commands(super, env_t);
+		if (tkz_check_flags(super->tkz, TKZ_FLAG_QUOTE_NL_END))
+		{
+			env_t->last_code = 2;
+			if (ac == 3)
+				break ;
+		}
 		//ft_printf("%d -------\n",err);
 	}
 
