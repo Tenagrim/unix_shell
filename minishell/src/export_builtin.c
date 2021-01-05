@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:31:55 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 18:51:47 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/04 14:48:36 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,25 +32,35 @@ static int		check_identifier(char *str)
 	return (1);
 }
 
+static void			err_bad_assignment(char *str)
+{
+	write(2, "minishell: export: `", 20);
+	write(2, str, ft_strlen(str));
+	write(2, "': not a valid identifier\n", 26);
+}
+
 int				export_biultin(char *const argv[], t_env *env)
 {
 	int		i;
 	int		ret;
+	int		last;
 
-	i = 1;
+	i = 0;
 	ret = 1;
-	while (ret &&  argv[i])
+	last = 0;
+	while (ret && argv[++i])
 	{
 
 		if (!check_identifier(argv[i]))
 		{
-			print_error3("export", argv[i], "not a valid identifier");
+			err_bad_assignment(argv[i]);
+			last = 1;
 			continue ;
 		}
 		ret = add_env_variable_expr(env, argv[i]);
+		last = !ret;
 		if (!ret)
-			print_error("minishell: bad assignment\n");
-		i++;
+			err_bad_assignment(argv[i]);
 	}
-	return (!ret);
+	return (last);
 }

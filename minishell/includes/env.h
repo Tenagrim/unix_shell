@@ -35,4 +35,7 @@ int		merge_env_native(t_env *env, char **native);
 
 void	print_env(t_env *env);
 
+
+int		replace_env_variable(t_env *env, char *key, char *relpace);
+
 #endif

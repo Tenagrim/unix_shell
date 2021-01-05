@@ -1,3 +1,5 @@
 *.swp
 *.o
+*.a
 minishell/minishell
+minishell_test

@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/05 19:45:53 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/05 19:55:54 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,31 @@ int		find_by_path(char *name)
 	return (( ret == 0) ? 1 : 0);
 }
 */
+
+int		add_env_pwd(t_env *env)
+{
+	char	*pwd;
+
+	if (find_env_variable(env, "PWD") == -1)
+	{
+		pwd = pwd_function();
+		pwd = (pwd) ? pwd : ft_strdup("very very long path");
+		add_env_variable(env, "PWD", pwd);
+		return (1);
+	}
+	return (0);
+}
+
+t_env		*make_env(char **env_n)
+{
+	t_env	*env;
+
+	env = init_env();
+	merge_env_native(env, env_n);
+	inc_shlvl(env);
+	return (env);
+}
+
 int		main(int ac, char **av, char **env)
 {
 	t_super		*super;
@@ -37,13 +62,11 @@ int		main(int ac, char **av, char **env)
  	signal(2, signal_handler);
 	signal(3, signal_handler);
 	err = 1;
+	env_t = make_env(env);
 	super = init_super();
-	env_t = init_env();
-	merge_env_native(env_t, env);
 	super->tkz->env_get = find_env_variable_cb_static;
 	super->tkz->last_exit_code = get_last_code;
 	super->tkz->data = env_t;
-
 	if (ac == 3 && !ft_strcmp(av[1], "-c"))
 	{
 		int		len = strlen(av[2]);
@@ -73,7 +96,7 @@ int		main(int ac, char **av, char **env)
 			write(2, "\n", 1);
 			//printf("\n");
 		if (is_super_error(err))
-			print_error1(super_error_str(err));
+			print_error1((char*)(super_error_str(err)));
 			//printf("minishell: %s\n", super_error_str(err));
 		else
 			exec_commands(super, env_t);
