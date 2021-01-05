@@ -15,8 +15,10 @@ CC= gcc $(FLAGS)
 
 all :  $(NAME)
 
-$(PRINTF) : ft_printf/libftprintf.a
+ft_printf/libftprintf.a:
 	$(MAKE) -C ft_printf
+
+$(PRINTF) : ft_printf/libftprintf.a
 	cp ft_printf/libftprintf.a .
 
 %.o: %.c $(HEADER)
