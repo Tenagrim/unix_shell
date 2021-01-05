@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 17:53:22 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/05 19:46:23 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,24 @@
 #include "token.h"
 #include <stdio.h>
 
-void	tkz_buf_init(t_tkz_buf *buf)
+int		tkz_buf_init(t_tkz_buf *buf)
 {
 	buf->fd = STDIN_FILENO;
 	buf->start = 0;
 	buf->len = 0;
+	buf->cap = 32;
+	buf->mem = malloc(buf->cap);
+	return (!!buf->mem);
+}
+
+void	tkz_free_buf(t_tkz_buf *buf)
+{
+	buf->len = 0;
+	buf->start = 0;
+	buf->cap = 0;
+	if (buf->mem)
+		free(buf->mem);
+	buf->mem = 0;
 }
 
 void	tkz_free_tokens(t_tkz *tkz)
@@ -41,11 +54,13 @@ void	tkz_free_tokens(t_tkz *tkz)
 
 void	tkz_free(t_tkz **tkz)
 {
-	if ((*tkz)->tkn)
+	if (*tkz && (*tkz)->tkn)
 	{
 		tkz_free_tokens(*tkz);
 		free((*tkz)->tkn);
 	}
+	if (*tkz && (*tkz)->buf.mem)
+		tkz_free_buf(&(*tkz)->buf);
 	if (*tkz)
 		free(*tkz);
 	*tkz = 0;
@@ -64,7 +79,8 @@ t_tkz	*tkz_init(void)
 		if (tkz->tkn)
 		{
 			tkz->state = 0;
-			tkz_buf_init(&tkz->buf);
+			if (!tkz_buf_init(&tkz->buf))
+				tkz_free(&tkz);
 		}
 		else
 			tkz_free(&tkz);
@@ -98,6 +114,10 @@ t_cchar	*tkz_error_str(int error)
 		return ("malloc null return");
 	else if (error == TKZ_ERROR_INVALID_DOLLAR_SYNTAX)
 		return ("invalid dollar syntax");
+	else if (error == TKZ_ERROR_UNEXPECTED_EOF_WHILE_QUOTE)
+		return ("unexpected EOF while looking for matching `''");
+	else if (error == TKZ_ERROR_UNEXPECTED_EOF_WHILE_DQUOTE)
+		return ("unexpected EOF while looking for matching `\"'");
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_NORMAL_ESCAPE)
 		return ("contract is terminated for backslash normal escape");
 	if (error == TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_DQUOTE_ESCAPE)
@@ -189,23 +209,79 @@ int		tkz_check_token_end_condition(t_tkz *tkz, t_token *tkn)
 	return (0);
 }
 
+int		tkz_buffer_expand(t_tkz_buf *buf, int at_least)
+{
+	int		new_cap;
+	void	*new_mem;
+
+	new_cap = buf->cap * 2;
+	if (new_cap < at_least)
+		new_cap = (at_least + 63) & -64;
+	if (new_cap <= 0)
+		new_cap = 16;
+	new_mem = malloc(new_cap);
+	if (new_mem)
+	{
+		if (buf->mem && buf->len > 0)
+		{
+			tkz_memcpy(new_mem, buf->mem + buf->start, buf->len);
+			free(buf->mem);
+		}
+		buf->mem = new_mem;
+		buf->cap = new_cap;
+		buf->start = 0;
+	}
+	return (!!new_mem ? TKZ_SUCCESS : TKZ_ERROR_MALLOC_NULL_RETURN);
+}
+
+int		tkz_write_buffer_str(t_tkz_buf *buf, const char *str, int len)
+{
+	int		error;
+
+	error = TKZ_SUCCESS;
+	if (buf->start + buf->len + len > buf->cap)
+		error = tkz_buffer_expand(buf, buf->start + buf->len + len);
+	if (!tkz_is_error(error))
+	{
+		tkz_memcpy(buf->mem + buf->start + buf->len, (void *)str, len);
+		buf->len += len;
+	}
+	return (error);
+}
+
+int		tkz_is_buffer_closed(t_tkz_buf *buf)
+{
+	int		i;
+
+	i = buf->len - 1;
+	while (i >= 0 && !tkz_is_endcommand(buf->mem[buf->start + i]))
+		i -= 1;
+	return (i >= 0);
+}
+
 int		tkz_read_buffer(t_tkz_buf *buf)
 {
 	int		ret;
+	int		error;
+	char	bufmem[64];
 
 	if (buf->len > 0 && buf->start > 0)
 		tkz_memcpy(buf->mem, buf->mem + buf->start, buf->len);
 	buf->start = 0;
-	if (buf->len < BUFFER_SIZE && buf->fd >= 0)
+	error = TKZ_SUCCESS;
+	if (buf->len < buf->cap && buf->fd >= 0)
 	{
-		ret = read(buf->fd, buf->mem + buf->len, BUFFER_SIZE - buf->len);
-		if (ret < 0)
-			return (TKZ_ERROR_UNISTD_READ_NEGATIVE_RETURN);
-		if (ret == 0)
-			return (TKZ_ERROR_UNISTD_READ_EOF);
-		buf->len += ret;
+		while (!tkz_is_error(error) && !tkz_is_buffer_closed(buf))
+		{
+			ret = read(buf->fd, bufmem, sizeof(bufmem));
+			if (ret < 0)
+				return (TKZ_ERROR_UNISTD_READ_NEGATIVE_RETURN);
+			if (ret == 0)
+				return (TKZ_ERROR_UNISTD_READ_EOF);
+			error = tkz_write_buffer_str(buf, bufmem, ret);
+		}
 	}
-	return (buf->fd >= 0 ? TKZ_SUCCESS : TKZ_ERROR_INVALID_FD);
+	return (buf->fd >= 0 ? error : TKZ_ERROR_INVALID_FD);
 }
 
 void	tkz_init_token(t_token *tkn)
@@ -220,15 +296,6 @@ void	tkz_free_token(t_token *tkn)
 	if (tkn->mem)
 		free(tkn->mem);
 	tkz_init_token(tkn);
-}
-
-int		tkz_prefetch_buffer(t_tkz_buf *buf, int count)
-{
-	if (count > BUFFER_SIZE - buf->len)
-		return (TKZ_ERROR_PREFETCH_REQUEST_OVERFLOW);
-	if (count > buf->len)
-		return (tkz_read_buffer(buf));
-	return (TKZ_SUCCESS);
 }
 
 void	tkz_buffer_increment(t_tkz_buf *buf, int count)
@@ -364,8 +431,6 @@ int		tkz_subprocessor_exit_code(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	int		exit_code;
 	int		error;
 
-	if (tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
-		return (error);
 	if (tkz_buffer_view_char(buf, 0) != '?')
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_QUATION_MARK_SYMBOL);
 	tkz_buffer_increment(buf, 1);
@@ -377,10 +442,57 @@ int		tkz_subprocessor_exit_code(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	return (error);
 }
 
-int		tkz_subprocessor_env(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
+t_token	tkz_subprocessor_env_get_identifier(t_tkz_buf *buf)
 {
-	int		error;
-	char	*value;
+	int			iden_len;
+	int			error;
+	char		c;
+	t_token		name;
+
+	iden_len = 0;
+	while ((c = tkz_buffer_view_char(buf, iden_len)) && tkz_is_identifier(c, !iden_len))
+		iden_len += 1;
+	tkz_init_token(&name);
+	error = tkz_write_token_str(&name, tkz_buffer_view(buf, 0), iden_len);
+	tkz_buffer_increment(buf, iden_len);
+	if (tkz_is_error(error))
+		tkz_free_token(&name);
+	return (name);
+}
+
+int		tkz_subprocessor_env(t_tkz *tkz, t_tkz_buf *buf)
+{
+	char		*value;
+	t_tkz_buf	nbuf;
+	t_token		name;
+	// int			len;
+	int			error;
+
+	error = TKZ_ERROR;
+	name = tkz_subprocessor_env_get_identifier(buf);
+	if (name.len > 0)
+	{
+		tkz_buf_init(&nbuf);
+		nbuf.fd = buf->fd;
+		// printf("name<%2d:%2d>[%.*s]\n", name.len, name.cap, name.len, name.mem);
+		error = tkz_write_token_str(&name, "", 1);
+		if (!tkz_is_error(error))
+		{
+			if (tkz->env_get(tkz->data, name.mem, &value))
+				error = tkz_write_buffer_str(&nbuf, value, tkz_strlen(value));
+			if (!tkz_is_error(error))
+				error = tkz_write_buffer_str(&nbuf, buf->mem + buf->start, buf->len);
+		}
+		if (!tkz_is_error(error))
+		{
+			tkz_free_buf(buf);
+			*buf = nbuf;
+		}
+		else
+			tkz_free_buf(&nbuf);
+	}
+	return (error);
+#if 0
 	t_token	name;
 
 	tkz_init_token(&name);
@@ -396,6 +508,7 @@ int		tkz_subprocessor_env(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 				error = tkz_write_token_str(tkn, value, tkz_strlen(value));
 	tkz_free_token(&name);
 	return (error);
+#endif
 }
 
 int		tkz_subprocessor_dollar(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
@@ -406,14 +519,14 @@ int		tkz_subprocessor_dollar(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	if (tkz_buffer_view_char(buf, 0) != '$')
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_DOLLAR_SYMBOL);
 	tkz_buffer_increment(buf, 1);
-	error = tkz_prefetch_buffer(buf, 1);
-	if (!tkz_is_error(error))
+	error = TKZ_SUCCESS;
+	if (!tkz_is_error(error) && buf->len > 0)
 	{
 		c = tkz_buffer_view_char(buf, 0);
 		if (c == '?')
 			error = tkz_subprocessor_exit_code(tkz, tkn, buf);
 		else if (tkz_is_identifier(c, 1))
-			error = tkz_subprocessor_env(tkz, tkn, buf);
+			error = tkz_subprocessor_env(tkz, buf);
 		else if (!tkz_is_word(c))
 			error = tkz_write_token_str(tkn, "$", 1);
 	}
@@ -429,10 +542,8 @@ int		tkz_subprocessor_normal_escape(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	if (tkz_buffer_view_char(buf, 0) != '\\')
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_NORMAL_ESCAPE);
 	tkz_buffer_increment(buf, 1);
-	if (tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
-		return (error);
 	c = tkz_buffer_view_char(buf, 0);
-	if (c != '\n')
+	if (c && c != '\n')
 		if (tkz_is_error((error = tkz_write_token_str(tkn, &c, 1))))
 			return (error);
 	tkz_buffer_increment(buf, 1);
@@ -447,12 +558,11 @@ int		tkz_subprocessor_dquote_escape(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 
 	if (tkz_buffer_view_char(buf, 0) != '\\')
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_DQUOTE_ESCAPE);
-	if (tkz_is_error((error = tkz_prefetch_buffer(buf, 2))))
-		return (error);
+	error = TKZ_SUCCESS;
 	c = tkz_buffer_view_char(buf, 1);
-	if (c == '"' || c == '\\' || c == '`' || c == '\n' || c == '$')
+	if (c == 0 || c == '"' || c == '\\' || c == '`' || c == '\n' || c == '$')
 	{
-		if (!tkz_is_error((error = tkz_write_token_str(tkn, &c, 1))))
+		if (c && !tkz_is_error((error = tkz_write_token_str(tkn, &c, 1))))
 			tkz_buffer_increment(buf, 2);
 	}
 	else
@@ -466,14 +576,14 @@ int		tkz_subprocessor_control(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	int		error;
 
 	error = TKZ_SUCCESS;
-	if (tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
-		return (error);
 	c = tkz_buffer_view_char(buf, 0);
+	if (!c)
+		return (TKZ_SUCCESS);
 	if (!tkz_is_control(c))
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_CONTROL_CHARACTER);
 	error = tkz_token_move_char_from_buffer(tkn, buf);
 	if (!tkz_is_error(error) && c == '>')
-		if (!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
+		if (buf->len > 0)
 			if (tkz_buffer_view_char(buf, 0) == '>')
 				error = tkz_token_move_char_from_buffer(tkn, buf);
 	if (!tkz_is_error(error))
@@ -481,12 +591,11 @@ int		tkz_subprocessor_control(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	return (error);
 }
 
-int		tkz_update_state(t_tkz *tkz, t_tkz_buf *buf)
+void	tkz_update_state(t_tkz *tkz, t_tkz_buf *buf)
 {
 	char	c;
-	int		error;
 
-	if (!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
+	if (buf->len > 0)
 	{
 		c = tkz_buffer_view_char(buf, 0);
 		if (c == '\'')
@@ -495,8 +604,11 @@ int		tkz_update_state(t_tkz *tkz, t_tkz_buf *buf)
 			tkz->state = STATE_DQUOTE;
 		else
 			tkz->state = STATE_NORMAL;
+		if (tkz->state == STATE_QUOTE || tkz->state == STATE_DQUOTE)
+			tkz->flags |= TKZ_FLAG_QUOTED;
 	}
-	return (error);
+	else
+		tkz->state = STATE_TERMINATE;
 }
 
 int		tkz_processor_normal(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
@@ -505,8 +617,7 @@ int		tkz_processor_normal(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	char	c;
 
 	error = TKZ_SUCCESS;
-	while (!tkz_is_error(error) &&
-		!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
+	while (!tkz_is_error(error) && buf->len > 0)
 	{
 		c = tkz_buffer_view_char(buf, 0);
 		if (c == '$')
@@ -519,7 +630,7 @@ int		tkz_processor_normal(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 			error = tkz_token_move_char_from_buffer(tkn, buf);
 	}
 	if (!tkz_is_error(error))
-		error = tkz_update_state(tkz, buf);
+		tkz_update_state(tkz, buf);
 	if (!tkz_is_error(error) && tkz_is_control(c) && tkn->len == 0)
 		error = tkz_subprocessor_control(tkz, tkn, buf);
 	return (error);
@@ -534,14 +645,16 @@ int		tkz_processor_quote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_QUOTE_SYMBOL);
 	tkz_buffer_increment(buf, 1);
 	error = TKZ_SUCCESS;
-	while (!tkz_is_error(error) &&
-		!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
+	while (!tkz_is_error(error) && buf->len > 0)
 	{
 		c = tkz_buffer_view_char(buf, 0);
 		if (c == '\'' || c == '\n')
 		{
 			if (c == '\n')
+			{
+				error = TKZ_ERROR_UNEXPECTED_EOF_WHILE_QUOTE;
 				tkz->flags |= TKZ_FLAG_QUOTE_NL_END;
+			}
 			break ;
 		}
 		error = tkz_token_move_char_from_buffer(tkn, buf);
@@ -549,7 +662,7 @@ int		tkz_processor_quote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	if (!tkz_is_error(error) && c == '\'')
 		tkz_buffer_increment(buf, 1);
 	if (!tkz_is_error(error))
-		error = tkz_update_state(tkz, buf);
+		tkz_update_state(tkz, buf);
 	return (error);
 }
 
@@ -562,8 +675,7 @@ int		tkz_processor_dquote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_DQUOTE_SYMBOL);
 	tkz_buffer_increment(buf, 1);
 	error = TKZ_SUCCESS;
-	while (!tkz_is_error(error) &&
-		!tkz_is_error((error = tkz_prefetch_buffer(buf, 1))))
+	while (!tkz_is_error(error) && buf->len > 0)
 	{
 		c = tkz_buffer_view_char(buf, 0);
 		if (c == '$')
@@ -571,7 +683,10 @@ int		tkz_processor_dquote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 		else if (c == '\n' || c == '"')
 		{
 			if (c == '\n')
+			{
+				error = TKZ_ERROR_UNEXPECTED_EOF_WHILE_DQUOTE;
 				tkz->flags |= TKZ_FLAG_QUOTE_NL_END;
+			}
 			break ;
 		}
 		else if (c == '\\')
@@ -582,10 +697,11 @@ int		tkz_processor_dquote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 	if (!tkz_is_error(error) && c == '"')
 		tkz_buffer_increment(buf, 1);
 	if (!tkz_is_error(error))
-		error = tkz_update_state(tkz, buf);
+		tkz_update_state(tkz, buf);
 	return (error);
 }
 
+#if 0
 int		tkz_skip_whitespaces_with_prefetching(t_tkz *tkz)
 {
 	char	c;
@@ -603,6 +719,7 @@ int		tkz_skip_whitespaces_with_prefetching(t_tkz *tkz)
 	}
 	return (error);
 }
+#endif
 
 void	tkz_buffer_skip_whitespaces(t_tkz_buf *buf)
 {
@@ -646,10 +763,32 @@ int		tkz_token_continue_condition(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 
 	condition = 1;
 	c = tkz_buffer_view_char(buf, 0);
-	if (!(!tkz_is_endcommand(c) && !tkz_is_wp(c) && !tkz_is_control(c) &&
-			!tkz_is_quote(c)) || tkz->state == STATE_TERMINATE)
+	if (tkz_is_endcommand(c) || tkz_is_wp(c) || tkz_is_control(c) ||
+			tkz_is_quote(c) || tkz->state == STATE_TERMINATE)
 		condition = 0;
+	if (!condition && tkn->len <= 0 && !tkz_check_flags(tkz, TKZ_FLAG_QUOTED))
+		tkz->tkn_count -= 1;
 	return (condition);
+}
+
+int		tkz_buffer_read_command(t_tkz *tkz, t_tkz_buf *buf)
+{
+	int		error;
+
+	error = TKZ_SUCCESS;
+	while (!tkz_is_error(error) && !tkz_is_buffer_closed(buf))
+	{
+		error = tkz_read_buffer(buf);
+		if (error == TKZ_ERROR_UNISTD_READ_EOF && buf->len > 0)
+		{
+			tkz->flags |= TKZ_FLAG_UNEXPECTED_EOF;
+			error = TKZ_SUCCESS;
+			break ;
+		}
+		if (buf->len > 0 && tkz_is_wp(tkz_buffer_view_char(buf, 0)))
+			tkz->flags |= TKZ_FLAG_WS_AT_START;
+	}
+	return (error);
 }
 
 int		tkz_make_token(t_tkz *tkz, int i_tkn, int *remains)
@@ -660,9 +799,9 @@ int		tkz_make_token(t_tkz *tkz, int i_tkn, int *remains)
 
 	tkn = &tkz->tkn[i_tkn];
 	tkz_init_token(tkn);
-	error = tkz_skip_whitespaces_with_prefetching(tkz);
 	tkz->state = STATE_NORMAL;
 	condition = 1;
+	error = tkz_buffer_read_command(tkz, &tkz->buf);
 	while (!tkz_is_error(error) && condition)
 	{
 		do {
@@ -679,7 +818,7 @@ int		tkz_make_token(t_tkz *tkz, int i_tkn, int *remains)
 			condition = tkz_token_continue_condition(tkz, tkn, &tkz->buf);
 	}
 	if (!tkz_is_error(error))
-		*remains = !tkz_buffer_is_endcommand(&tkz->buf);
+		*remains = tkz->buf.len > 0 && !tkz_buffer_is_endcommand(&tkz->buf);
 	return (error);
 }
 
@@ -721,12 +860,14 @@ int		tkz_make(t_tkz *tkz)
 	tkz_buffer_full_skip_endcommand(&tkz->buf);
 	if (tkz->tkn_count == 1 && tkz->tkn->len == 0)
 		tkz_remove_last_token(tkz);
+#if 0
 	if (tkz_is_error(error) && (error == TKZ_ERROR_UNISTD_READ_EOF &&
 			(tkz->tkn_count != 0 || tkz->flags & TKZ_FLAG_WS_AT_START)))
 	{
 		tkz->flags |= TKZ_FLAG_UNEXPECTED_EOF;
 		error = TKZ_SUCCESS;
 	}
+#endif
 	return (error);
 }
 
@@ -755,7 +896,7 @@ int		tkz_check_flags(t_tkz *tkz, int flags)
 void	tkz_print_buf(t_tkz_buf *buf)
 {
 	printf("buffer state:\n");
-	printf(" - fd: %d;\n - start: %d;\n - len: %d\n - cap: %d\n", buf->fd, buf->start, buf->len, BUFFER_SIZE);
+	printf(" - fd: %d;\n - start: %d;\n - len: %d\n - cap: %d\n", buf->fd, buf->start, buf->len, buf->cap);
 	printf(" - mem: [%.*s]\n", buf->len, buf->mem + buf->start);
 }
 

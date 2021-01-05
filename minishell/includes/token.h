@@ -6,16 +6,12 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:11:05 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/03 17:36:27 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/05 19:27:41 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKEN_H
 # define TOKEN_H
-
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 2048
-# endif
 
 typedef struct	s_token
 {
@@ -29,7 +25,8 @@ typedef struct s_tokenizer_buffer
 	int			fd;
 	int			start;
 	int			len;
-	char		mem[BUFFER_SIZE];
+	int			cap;
+	char		*mem;
 }				t_tkz_buf;
 
 # define STATE_NORMAL 0
@@ -59,6 +56,7 @@ typedef struct	s_tokenizer
 # define TKZ_FLAG_UNEXPECTED_EOF (1 << 0)
 # define TKZ_FLAG_WS_AT_START (1 << 1)
 # define TKZ_FLAG_QUOTE_NL_END (1 << 2)
+# define TKZ_FLAG_QUOTED (1 << 3)
 
 # define TKZ_SUCCESS (1)
 # define TKZ_ERROR (-1)
@@ -68,6 +66,8 @@ typedef struct	s_tokenizer
 # define TKZ_ERROR_MALLOC_NULL_RETURN (-5)
 # define TKZ_ERROR_INVALID_DOLLAR_SYNTAX (-6)
 # define TKZ_ERROR_INVALID_FD (-7)
+# define TKZ_ERROR_UNEXPECTED_EOF_WHILE_QUOTE (-8)
+# define TKZ_ERROR_UNEXPECTED_EOF_WHILE_DQUOTE (-9)
 
 /*
 ** internal errors (indicates bugs in library)
@@ -86,7 +86,7 @@ int				tkz_make(t_tkz *tkz);
 void			tkz_free(t_tkz **tkz);
 
 int				tkz_is_command_buffered(t_tkz *tkz);
-int				tkz_check_flag(t_tkz *tkz, int flag);
+int				tkz_check_flags(t_tkz *tkz, int flag);
 
 int				tkz_is_error(int value);
 const char		*tkz_error_str(int value);
