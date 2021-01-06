@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 17:25:04 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 19:24:38 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 typedef struct	t_program
 {
+	int			arg_cap;
+	int			arg_count;
 	char		**arguments;
 	char		*redirect_filename[2];
 	unsigned	flags;
@@ -45,6 +47,11 @@ typedef struct	s_super
 # define SUP_ERROR_UNRECOGNIZED_REDIRECTION (-56)
 # define SUP_ERROR_INVALID_EXEC_SEPARATION (-57)
 # define SUP_ERROR_INVALID_SYNTAX (-58)
+
+# define SUP_STATE_ARGUMENT 0
+# define SUP_STATE_REDIRECT 1
+# define SUP_STATE_PIPE 1
+# define SUP_STATE_TERMINATE 2
 
 # define C_LFT_RDR	(1 << 0)
 # define C_RT_RDR	(1 << 1)

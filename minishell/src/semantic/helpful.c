@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:10:24 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 17:00:57 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 19:59:39 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ int		copy_token_string(t_token *tkn, char **pstr)
 	(*pstr) = malloc(tkn->len + 1);
 	if (!(*pstr))
 		return (SUP_ERROR_MALLOC_NULL_RETURN);
-	sp_memcpy((*pstr), tkn->mem, tkn->len);
+	if (tkn->len > 0)
+		sp_memcpy((*pstr), tkn->mem, tkn->len);
 	(*pstr)[tkn->len] = '\0';
 	return (SUP_SUCCESS);
 }

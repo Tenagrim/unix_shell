@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:07:05 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 17:25:16 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 19:49:25 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ const char	*super_error_str(int error)
 		return (tkz_error_str(error));
 }
 
-int			rechange_error(t_super *sp, int remains, int error)
+int			rechange_error(t_super *sp, int error)
 {
-	if (error == SUP_ERROR_NO_ARGUMENTS && (remains || sp->count > 0))
+	if (error == SUP_ERROR_NO_ARGUMENTS && (sp->count > 0))
 		error = SUP_ERROR_INVALID_SYNTAX;
 	else
 		error = SUP_SUCCESS;

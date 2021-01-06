@@ -6,54 +6,49 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:11:41 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 17:00:31 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 19:48:10 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
 #include <stdlib.h>
 
-int		count_super_program_arguments(t_super *sp)
+int		expand_program_argument_array(t_program *pr)
 {
-	int		count;
-	t_token	*tkn;
+	int		new_cap;
+	void	*new_mem;
 
-	count = 0;
-	while ((tkn = get_current_token(sp)))
+	new_cap = pr->arg_cap * 2;
+	if (new_cap <= 0)
+		new_cap = 16;
+	new_mem = malloc((new_cap + 1) * sizeof (char *));
+	if (!new_mem)
+		return (SUP_ERROR_MALLOC_NULL_RETURN);
+	if (pr->arguments)
 	{
-		if (is_token_argument(tkn))
-			count += 1;
-		else
-			break ;
-		increment_token_pointer(sp);
+		sp_memcpy(new_mem, pr->arguments, (pr->arg_count + 1) * sizeof (char *));
+		free(pr->arguments);
 	}
-	move_token_pointer(sp, -count);
-	return (count);
+	pr->arguments = (char **)new_mem;
+	pr->arg_cap = new_cap;
+	return (SUP_SUCCESS);
 }
 
-int		make_super_program_arguments(t_super *sp, t_program *pr)
+int		add_program_argument(t_program *pr, t_token *token)
 {
-	int		count;
 	int		error;
-	t_token	*tkn;
-	int		i;
 
-	count = count_super_program_arguments(sp);
-	if (!count)
-		return (SUP_ERROR_NO_ARGUMENTS);
-	pr->arguments = malloc(sizeof(char *) * (count + 1));
-	if (!pr->arguments)
-		return (SUP_ERROR_MALLOC_NULL_RETURN);
 	error = SUP_SUCCESS;
-	i = 0;
-	while (!is_super_error(error) && i < count)
+	if (pr->arg_count >= pr->arg_cap)
+		error = expand_program_argument_array(pr);
+	if (!is_super_error(error))
 	{
-		tkn = get_offseted_token(sp, i);
-		pr->arguments[i] = 0;
-		error = copy_token_string(tkn, &pr->arguments[i]);
-		i += 1;
+		error = copy_token_string(token, &pr->arguments[pr->arg_count]);
+		if (!is_super_error(error))
+		{
+			pr->arg_count += 1;
+			pr->arguments[pr->arg_count] = 0;
+		}
 	}
-	pr->arguments[i] = 0;
-	move_token_pointer(sp, count);
 	return (error);
 }
