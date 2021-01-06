@@ -6,11 +6,12 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:13:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 14:52:42 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 17:01:07 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
+#include <stdlib.h>
 
 int		recognize_program_redirection(t_program *pr, t_token *rd, t_token *fn)
 {

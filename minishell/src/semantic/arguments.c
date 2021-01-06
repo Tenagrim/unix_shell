@@ -6,11 +6,12 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:11:41 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 14:51:22 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 17:00:31 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
+#include <stdlib.h>
 
 int		count_super_program_arguments(t_super *sp)
 {

@@ -1,38 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helpful.c                                          :+:      :+:    :+:   */
+/*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/06 14:10:24 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 17:00:57 by jsandsla         ###   ########.fr       */
+/*   Created: 2021/01/06 16:46:02 by jsandsla          #+#    #+#             */
+/*   Updated: 2021/01/06 16:55:35 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
 #include <stdlib.h>
+#include <unistd.h>
 
-void	sp_memcpy(void *l, void *r, int len)
+int		local_strlen(const char *str)
 {
 	int		i;
 
 	i = 0;
-	while (i < len)
-	{
-		((unsigned char *)l)[i] = ((unsigned char *)r)[i];
+	while (str[i])
 		i += 1;
-	}
+	return (i);
 }
 
-int		copy_token_string(t_token *tkn, char **pstr)
+void	print_env(t_env *env)
 {
-	if (*pstr)
-		free(*pstr);
-	(*pstr) = malloc(tkn->len + 1);
-	if (!(*pstr))
-		return (SUP_ERROR_MALLOC_NULL_RETURN);
-	sp_memcpy((*pstr), tkn->mem, tkn->len);
-	(*pstr)[tkn->len] = '\0';
-	return (SUP_SUCCESS);
+	int		i;
+	t_var	*var;
+	char	*expr;
+
+	i = 0;
+	while (i < env->var_count)
+	{
+		var = &env->var[i];
+		expr = gen_var_expr(var);
+		if (expr)
+		{
+			write(1, expr, local_strlen(expr));
+			write(1, "\n", 1);
+			free(expr);
+		}
+		i += 1;
+	}
 }

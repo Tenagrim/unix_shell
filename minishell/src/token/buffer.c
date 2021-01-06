@@ -6,12 +6,13 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 12:46:01 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 13:31:40 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 17:00:11 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
 #include <unistd.h>
+#include <stdlib.h>
 
 int		tkz_buffer_expand(t_tkz_buf *buf, int at_least)
 {
