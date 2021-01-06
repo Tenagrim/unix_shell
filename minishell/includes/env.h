@@ -2,6 +2,7 @@
 
 #ifndef ENV_H
 # define ENV_H
+#include <semantic.h>
 
 typedef	struct	s_entry {
 	int		key_len;

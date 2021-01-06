@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:31:24 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 19:25:08 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/06 19:11:58 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,6 @@ void	print_error3(char  *str1, char *str2, char *error);
 int		(*get_exec_func(char *name))(char *const argv[], t_env *env);
 int		inc_shlvl(t_env *env);
 char	*pwd_function(void);
+int		find_file_in_dir(char *dir_name, char *file);
 
 #endif

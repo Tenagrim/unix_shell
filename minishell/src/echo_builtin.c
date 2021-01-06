@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:36:10 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 14:37:56 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/06 19:07:22 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	skip_flags(char *const argv[], char ***first_arg)
 			break ;
 		i++;
 	}
-	*first_arg = argv + i;
+	*first_arg = (char **)(argv) + i;
 	return (res);
 }
 

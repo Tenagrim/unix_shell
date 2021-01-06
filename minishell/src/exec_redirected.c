@@ -6,12 +6,13 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 14:53:04 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 16:59:48 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/06 19:09:51 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 #include <exec_args.h>
+#include<sys/wait.h>
 
 static void	close_fds(int *fds)
 {
