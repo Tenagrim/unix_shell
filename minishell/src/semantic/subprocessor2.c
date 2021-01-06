@@ -6,12 +6,13 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:13:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 21:25:44 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 21:32:00 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
 #include <fcntl.h>
+#include <unistd.h>
 
 void	create_file(const char *filename, int flags)
 {
