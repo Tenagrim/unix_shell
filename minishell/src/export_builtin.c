@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:31:55 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 14:41:34 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/06 18:16:23 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,12 @@ static int		is_identifier_l(char c, int is_begin)
 static int		check_identifier(char *str)
 {
 	int	i;
+	int	len;
 
+	len = ft_strlen(str);
 	i = 0;
+	if ((len == 1 && *str == '=') || len == 0)
+		return (0);
 	while (str[i] && str[i] != '=')
 	{
 		if (!is_identifier_l(str[i], i))
