@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2020/12/27 22:32:32 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 17:25:04 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct	s_super
 # define SUP_ERROR_INVALID_REDIRECTION_FILE (-55)
 # define SUP_ERROR_UNRECOGNIZED_REDIRECTION (-56)
 # define SUP_ERROR_INVALID_EXEC_SEPARATION (-57)
-# define SUP_ERROR_INVALID_PIPE_SYNTAX (-58)
+# define SUP_ERROR_INVALID_SYNTAX (-58)
 
 # define C_LFT_RDR	(1 << 0)
 # define C_RT_RDR	(1 << 1)

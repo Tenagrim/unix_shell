@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 12:24:36 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 17:27:02 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,26 @@ t_env		*make_env(char **env_n)
 	return (env);
 }
 
+int		should_prequit(int err, int ac)
+{
+	return (err == TKZ_ERROR_UNISTD_READ_EOF || err == TKZ_ERROR_INVALID_FD);
+}
+
+int		should_postquit(t_super *super, t_env *env, int err, int ac)
+{
+	int		should;
+
+	should = 0;
+	if (tkz_check_flags(super->tkz, TKZ_FLAG_QUOTE_NL_END) ||
+		err == SUP_ERROR_INVALID_SYNTAX)
+	{
+		env->last_code = 2;
+		if (ac == 3)
+			should = 1;
+	}
+	return (should);
+}
+
 int		main(int ac, char **av, char **env)
 {
 	t_super		*super;
@@ -64,8 +84,8 @@ int		main(int ac, char **av, char **env)
 	err = 1;
 	env_t = make_env(env);
 	super = init_super();
-	super->tkz->env_get = find_env_variable_cb_static;
-	super->tkz->last_exit_code = get_last_code;
+	super->tkz->env_get = (t_tkz_env_get)find_env_variable_cb_static;
+	super->tkz->last_exit_code = (t_tkz_last_exit_code)get_last_code;
 	super->tkz->data = env_t;
 	if (ac == 3 && !ft_strcmp(av[1], "-c"))
 	{
@@ -91,22 +111,16 @@ int		main(int ac, char **av, char **env)
 		// print_super(super);
 		// tkz_print(super->tkz);
 		// printf ("err: %d\n", err);
-		if (err == TKZ_ERROR_UNISTD_READ_EOF || err == TKZ_ERROR_INVALID_FD)
+		if (should_prequit(err, ac))
 			break ;
 		if (tkz_check_flags(super->tkz, TKZ_FLAG_UNEXPECTED_EOF))
 			write(2, "\n", 1);
-			//printf("\n");
 		if (is_super_error(err))
 			print_error1((char*)(super_error_str(err)));
-			//printf("minishell: %s\n", super_error_str(err));
 		else
 			exec_commands(super, env_t);
-		if (tkz_check_flags(super->tkz, TKZ_FLAG_QUOTE_NL_END))
-		{
-			env_t->last_code = 2;
-			if (ac == 3)
-				break ;
-		}
+		if (should_postquit(super, env_t, err, ac))
+			break ;
 		//ft_printf("%d -------\n",err);
 	}
 
