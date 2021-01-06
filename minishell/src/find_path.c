@@ -6,11 +6,12 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 13:18:33 by gshona            #+#    #+#             */
-/*   Updated: 2020/12/27 13:23:12 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/06 19:12:53 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
+#include <minishell.h>
 
 static char	*get_full_path(char *dir_name, char *name)
 {
@@ -38,7 +39,6 @@ char	*find_path(char *path, char *name)
 {
 	char	*dir_name;
 	char	*sep;
-	char	found;
 	char	*res;
 
 	res = NULL;

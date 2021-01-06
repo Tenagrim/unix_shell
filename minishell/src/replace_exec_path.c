@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 18:40:01 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 14:55:53 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/06 19:24:26 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static char	*get_path_with_env(t_env *env, char *name)
 {
-	int		ret;
 	char	*path;
 	char	*res;
 
