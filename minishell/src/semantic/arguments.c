@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:11:41 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 19:48:10 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 21:26:38 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,14 @@ int		expand_program_argument_array(t_program *pr)
 
 	new_cap = pr->arg_cap * 2;
 	if (new_cap <= 0)
-		new_cap = 16;
-	new_mem = malloc((new_cap + 1) * sizeof (char *));
+		new_cap = 15;
+	new_mem = malloc((new_cap + 1) * sizeof(char *));
 	if (!new_mem)
 		return (SUP_ERROR_MALLOC_NULL_RETURN);
 	if (pr->arguments)
 	{
-		sp_memcpy(new_mem, pr->arguments, (pr->arg_count + 1) * sizeof (char *));
+		sp_memcpy(new_mem, pr->arguments,
+			(pr->arg_count + 1) * sizeof(char *));
 		free(pr->arguments);
 	}
 	pr->arguments = (char **)new_mem;
@@ -43,6 +44,7 @@ int		add_program_argument(t_program *pr, t_token *token)
 		error = expand_program_argument_array(pr);
 	if (!is_super_error(error))
 	{
+		pr->arguments[pr->arg_count] = 0;
 		error = copy_token_string(token, &pr->arguments[pr->arg_count]);
 		if (!is_super_error(error))
 		{

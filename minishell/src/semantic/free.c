@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:05:55 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 17:00:49 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 20:15:40 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ void	free_super_program(t_program *pr)
 	}
 	if (ptr)
 		free(ptr);
+	pr->arg_cap = 0;
+	pr->arg_count = 0;
+	pr->arguments = 0;
 	if (pr->redirect_filename[0])
 		free(pr->redirect_filename[0]);
 	if (pr->redirect_filename[1])

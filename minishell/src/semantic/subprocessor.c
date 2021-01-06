@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 19:45:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 19:54:20 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 21:27:55 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int		subprocessor_argument(t_super *sp, int *state)
 			*state = SUP_STATE_PIPE;
 		else
 			error = add_program_argument(get_current_program(sp), current);
+		if (*state != SUP_STATE_ARGUMENT)
+			break ;
 		increment_token_pointer(sp);
 	}
 	if (!current)
@@ -62,8 +64,18 @@ int		subprocessor_pipe(t_super *sp, int *state)
 {
 	int			error;
 	t_program	*pr;
+	t_token		*tkn;
 
+	tkn = get_current_token(sp);
+	if (!tkn || !is_token_pipe(tkn))
+	{
+		*state = SUP_STATE_ARGUMENT;
+		return (SUP_SUCCESS);
+	}
+	increment_token_pointer(sp);
 	pr = get_current_program(sp);
+	if (pr->arg_count <= 0)
+		return (SUP_ERROR_NO_ARGUMENTS);
 	pr->flags |= SUP_REDIRECTION_PIPE_FLAG;
 	*state = SUP_STATE_ARGUMENT;
 	error = SUP_SUCCESS;
@@ -74,5 +86,5 @@ int		subprocessor_pipe(t_super *sp, int *state)
 		sp->count += 1;
 		init_super_program(get_current_program(sp));
 	}
-	return (SUP_SUCCESS);
+	return (error);
 }

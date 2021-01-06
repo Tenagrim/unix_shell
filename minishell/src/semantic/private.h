@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 13:14:03 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 19:49:34 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 21:27:17 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,13 @@ void		increment_token_pointer(t_super *sp);
 void		move_token_pointer(t_super *sp, int offset);
 int			token_compare(t_token *tkn, const char *str, int len);
 
+int			subprocessor_redirect_input(t_super *sp, int *state);
+int			subprocessor_redirect_output(t_super *sp, int *state);
+int			subprocessor_redirect_output_append(t_super *sp, int *state);
 
-int		subprocessor_redirect_input(t_super *sp, int *state);
-int		subprocessor_redirect_output(t_super *sp, int *state);
-int		subprocessor_redirect_output_append(t_super *sp, int *state);
-
-int		subprocessor_argument(t_super *sp, int *state);
-int		subprocessor_redirect(t_super *sp, int *state);
-int		subprocessor_pipe(t_super *sp, int *state);
+int			subprocessor_argument(t_super *sp, int *state);
+int			subprocessor_redirect(t_super *sp, int *state);
+int			subprocessor_pipe(t_super *sp, int *state);
 
 t_program	*get_current_program(t_super *sp);
 int			expand_super_programs_array(t_super *sp);

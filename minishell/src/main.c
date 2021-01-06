@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 20:02:15 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 20:50:41 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,8 @@ int		main(int ac, char **av, char **env)
 		if (!tkz_is_command_buffered(super->tkz))
 			write_prompt();
 		err =  make_super(super);
-		print_super(super);
-		tkz_print(super->tkz);
+		// print_super(super);
+		// tkz_print(super->tkz);
 		// printf ("err: %d\n", err);
 		if (should_prequit(err, ac))
 			break ;

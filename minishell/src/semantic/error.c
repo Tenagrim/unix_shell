@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:07:05 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 19:49:25 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 21:01:12 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,5 @@ int			rechange_error(t_super *sp, int error)
 {
 	if (error == SUP_ERROR_NO_ARGUMENTS && (sp->count > 0))
 		error = SUP_ERROR_INVALID_SYNTAX;
-	else
-		error = SUP_SUCCESS;
 	return (error);
 }

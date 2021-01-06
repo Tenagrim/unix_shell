@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:04:37 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 19:05:42 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 21:07:33 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ t_super	*init_super(void)
 		if (super->programs)
 		{
 			super->tkz = tkz_init();
-			super->tkz_error = TKZ_SUCCESS;
 			super->current_token = 0;
 			if (!super->tkz)
 				free_super(&super);

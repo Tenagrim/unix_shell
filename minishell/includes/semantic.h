@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 19:24:38 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 21:07:19 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct	s_super
 
 	int			current_token;
 	t_tkz		*tkz;
-	int			tkz_error;
 }				t_super;
 
 # define SUP_SUCCESS (1)
@@ -50,8 +49,8 @@ typedef struct	s_super
 
 # define SUP_STATE_ARGUMENT 0
 # define SUP_STATE_REDIRECT 1
-# define SUP_STATE_PIPE 1
-# define SUP_STATE_TERMINATE 2
+# define SUP_STATE_PIPE 2
+# define SUP_STATE_TERMINATE 3
 
 # define C_LFT_RDR	(1 << 0)
 # define C_RT_RDR	(1 << 1)

@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 14:14:13 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 19:56:59 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 21:26:55 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_program	*get_current_program(t_super *sp)
 	return (pr);
 }
 
-int		expand_super_programs_array(t_super *sp)
+int			expand_super_programs_array(t_super *sp)
 {
 	int		new_cap;
 	void	*new_ptr;
@@ -44,7 +44,7 @@ int		expand_super_programs_array(t_super *sp)
 	return (SUP_SUCCESS);
 }
 
-void	delete_current_program(t_super *sp)
+void		delete_current_program(t_super *sp)
 {
 	t_program	*pr;
 
@@ -56,7 +56,7 @@ void	delete_current_program(t_super *sp)
 	}
 }
 
-int		make_super(t_super *sp)
+int			make_super(t_super *sp)
 {
 	int		error;
 	int		state;
@@ -64,7 +64,6 @@ int		make_super(t_super *sp)
 	free_super_programs(sp);
 	sp->current_token = 0;
 	error = tkz_make(sp->tkz);
-	sp->tkz_error = error;
 	if (tkz_is_error(error))
 		return (error);
 	sp->count += 1;
