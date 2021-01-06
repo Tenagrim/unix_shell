@@ -7,12 +7,13 @@ SRC_DIR = src/
 OBJ_DIR = src/
 SRC_FILES = $(shell ls -1 src | grep "\.c")\
 $(addprefix token/,$(shell ls -1 src/token | grep "\.c"))\
-$(addprefix semantic/,$(shell ls -1 src/semantic | grep "\.c"))
+$(addprefix semantic/,$(shell ls -1 src/semantic | grep "\.c"))\
+$(addprefix env/,$(shell ls -1 src/env | grep "\.c"))
 INC=/usr/include
 INCLIB=$(INC)/../lib
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ_FILES = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
-FLAGS = -Wall -Wextra  -Iincludes/ -O0 -g #FIXME add -Werror
+FLAGS = -Wall -Wextra -Werror  -Iincludes/ -O0 -g #FIXME add -Werror
 CC= gcc $(FLAGS)
 
 all :  $(NAME)

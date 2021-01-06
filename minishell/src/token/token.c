@@ -6,11 +6,12 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 13:57:50 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 17:00:19 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
+#include <stdlib.h>
 
 int		tkz_expand_tokens_array(t_tkz *tkz)
 {
