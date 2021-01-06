@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/05 20:58:41 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 12:24:36 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,12 @@ int		main(int ac, char **av, char **env)
 	if (ac == 3 && !ft_strcmp(av[1], "-c"))
 	{
 		int		len = strlen(av[2]);
+		if (len + 1 > super->tkz->buf.cap)
+		{
+			free(super->tkz->buf.mem);
+			super->tkz->buf.mem = malloc(len + 1);
+			super->tkz->buf.cap = len + 1;
+		}
 		memcpy(super->tkz->buf.mem, av[2], len);
 		super->tkz->buf.mem[len++] = '\n';
 		super->tkz->buf.start = 0;
