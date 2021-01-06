@@ -6,15 +6,11 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 12:59:48 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 13:00:59 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 13:33:15 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
-
-int		tkz_processor_normal(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf);
-int		tkz_processor_quote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf);
-int		tkz_processor_dquote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf);
 
 int		tkz_processor_normal(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
@@ -83,11 +79,7 @@ int		tkz_processor_dquote(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 			error = tkz_subprocessor_dollar(tkz, tkn, buf);
 		else if (c == '\n' || c == '"')
 		{
-			if (c == '\n')
-			{
-				error = TKZ_ERROR_UNEXPECTED_EOF_WHILE_DQUOTE;
-				tkz->flags |= TKZ_FLAG_QUOTE_NL_END;
-			}
+			error = tkz_subprocessor_dquote_end(tkz, tkn, buf);
 			break ;
 		}
 		else if (c == '\\')

@@ -6,17 +6,11 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 12:42:36 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 12:45:56 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 13:32:53 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
-
-void	tkz_memcpy(void *l, void *r, int size);
-int		tkz_strlen(char *str);
-void	tkz_reverse_str(char *begin, int len);
-int		tkz_draw_int(char *out, int num);
-int		tkz_strchr(char c, const char *str);
 
 void	tkz_memcpy(void *l, void *r, int size)
 {

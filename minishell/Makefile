@@ -5,7 +5,9 @@ PRINTF = libftprintf.a
 MLX = mlx/libmlx.a
 SRC_DIR = src/
 OBJ_DIR = src/
-SRC_FILES = $(shell ls -1 src | grep "\.c")
+SRC_FILES = $(shell ls -1 src | grep "\.c")\
+$(addprefix token/,$(shell ls -1 src/token | grep "\.c"))\
+$(addprefix semantic/,$(shell ls -1 src/semantic | grep "\.c"))
 INC=/usr/include
 INCLIB=$(INC)/../lib
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))

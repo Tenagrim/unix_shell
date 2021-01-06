@@ -6,14 +6,11 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 12:54:44 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 12:56:48 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 13:47:29 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
-
-int		tkz_subprocessor_dquote_escape(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf);
-int		tkz_subprocessor_control(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf);
 
 int		tkz_subprocessor_dquote_escape(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
@@ -53,5 +50,21 @@ int		tkz_subprocessor_control(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 				error = tkz_token_move_char_from_buffer(tkn, buf);
 	if (!tkz_is_error(error))
 		tkz->state = STATE_TERMINATE;
+	return (error);
+}
+
+int		tkz_subprocessor_dquote_end(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
+{
+	char	c;
+	int		error;
+
+	(void)tkn;
+	error = TKZ_SUCCESS;
+	c = tkz_buffer_view_char(buf, 0);
+	if (c == '\n')
+	{
+		error = TKZ_ERROR_UNEXPECTED_EOF_WHILE_DQUOTE;
+		tkz->flags |= TKZ_FLAG_QUOTE_NL_END;
+	}
 	return (error);
 }

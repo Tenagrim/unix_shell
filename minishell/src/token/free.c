@@ -6,16 +6,12 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 12:33:56 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 12:35:24 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 13:32:45 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
-
-void	tkz_free_buf(t_tkz_buf *buf);
-void	tkz_free_tokens(t_tkz *tkz);
-void	tkz_free(t_tkz **tkz);
-void	tkz_free_token(t_token *tkn);
+#include <stdlib.h>
 
 void	tkz_free_buf(t_tkz_buf *buf)
 {

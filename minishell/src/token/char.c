@@ -6,16 +6,11 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 12:39:08 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 12:41:25 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 13:32:11 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
-
-int		tkz_is_wp(char c);
-int		tkz_is_endcommand(char c);
-int		tkz_is_quote(char c);
-int		tkz_is_control(char c);
 
 int		tkz_is_wp(char c)
 {

@@ -1,25 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   char2.c                                            :+:      :+:    :+:   */
+/*   char.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/06 12:40:46 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 13:32:17 by jsandsla         ###   ########.fr       */
+/*   Created: 2021/01/06 14:08:49 by jsandsla          #+#    #+#             */
+/*   Updated: 2021/01/06 14:09:24 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
 
-int		tkz_is_word(char c)
+int		is_token_redirect(t_token *tkn)
 {
-	return (!tkz_is_endcommand(c) && !tkz_is_wp(c) && !tkz_is_control(c) &&
-			!tkz_is_quote(c) && c != '$');
+	int		ret;
+
+	ret = 0;
+	if (tkn->len == 1 && (tkn->mem[0] == '>' || tkn->mem[0] == '<'))
+		ret = 1;
+	else if (tkn->len == 2 && (tkn->mem[0] == '>' && tkn->mem[1] == '>'))
+		ret = 1;
+	return (ret);
 }
 
-int		tkz_is_identifier(char c, int is_begin)
+int		is_token_pipe(t_token *tkn)
 {
-	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
-		(!is_begin && c >= '0' && c <= '9'));
+	return (tkn->len == 1 && tkn->mem[0] == '|');
+}
+
+int		is_token_argument(t_token *tkn)
+{
+	return (!is_token_redirect(tkn) && !is_token_pipe(tkn));
 }

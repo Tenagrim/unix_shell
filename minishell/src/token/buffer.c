@@ -6,16 +6,12 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 12:46:01 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 12:59:43 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 13:31:40 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
-
-int		tkz_buffer_expand(t_tkz_buf *buf, int at_least);
-int		tkz_write_buffer_str(t_tkz_buf *buf, const char *str, int len);
-int		tkz_buffer_read_command(t_tkz *tkz, t_tkz_buf *buf)
-int		tkz_read_buffer(t_tkz_buf *buf);
+#include <unistd.h>
 
 int		tkz_buffer_expand(t_tkz_buf *buf, int at_least)
 {

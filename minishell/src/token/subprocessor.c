@@ -6,17 +6,11 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 12:49:28 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 12:54:38 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 13:33:34 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
-
-int		tkz_subprocessor_exit_code(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf);
-t_token	tkz_subprocessor_env_get_identifier(t_tkz_buf *buf);
-int		tkz_subprocessor_env(t_tkz *tkz, t_tkz_buf *buf);
-int		tkz_subprocessor_dollar(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf);
-int		tkz_subprocessor_normal_escape(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf);
 
 int		tkz_subprocessor_exit_code(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
@@ -44,7 +38,8 @@ t_token	tkz_subprocessor_env_get_identifier(t_tkz_buf *buf)
 	t_token		name;
 
 	iden_len = 0;
-	while ((c = tkz_buffer_view_char(buf, iden_len)) && tkz_is_identifier(c, !iden_len))
+	while ((c = tkz_buffer_view_char(buf, iden_len)) &&
+			tkz_is_identifier(c, !iden_len))
 		iden_len += 1;
 	tkz_init_token(&name);
 	error = tkz_write_token_str(&name, tkz_buffer_view(buf, 0), iden_len);
@@ -111,8 +106,8 @@ int		tkz_subprocessor_normal_escape(t_tkz *tkz, t_token *tkn, t_tkz_buf *buf)
 {
 	char	c;
 	int		error;
-	(void)tkz;
 
+	(void)tkz;
 	if (tkz_buffer_view_char(buf, 0) != '\\')
 		return (TKZ_ERROR_CONTRACT_IS_TERMINATED_FOR_BACKSLASH_NORMAL_ESCAPE);
 	tkz_buffer_increment(buf, 1);

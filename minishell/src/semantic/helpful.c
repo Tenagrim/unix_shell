@@ -1,25 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   char2.c                                            :+:      :+:    :+:   */
+/*   helpful.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/06 12:40:46 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 13:32:17 by jsandsla         ###   ########.fr       */
+/*   Created: 2021/01/06 14:10:24 by jsandsla          #+#    #+#             */
+/*   Updated: 2021/01/06 14:52:10 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
 
-int		tkz_is_word(char c)
+void	sp_memcpy(void *l, void *r, int len)
 {
-	return (!tkz_is_endcommand(c) && !tkz_is_wp(c) && !tkz_is_control(c) &&
-			!tkz_is_quote(c) && c != '$');
+	int		i;
+
+	i = 0;
+	while (i < len)
+	{
+		((unsigned char *)l)[i] = ((unsigned char *)r)[i];
+		i += 1;
+	}
 }
 
-int		tkz_is_identifier(char c, int is_begin)
+int		copy_token_string(t_token *tkn, char **pstr)
 {
-	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
-		(!is_begin && c >= '0' && c <= '9'));
+	if (*pstr)
+		free(*pstr);
+	(*pstr) = malloc(tkn->len + 1);
+	if (!(*pstr))
+		return (SUP_ERROR_MALLOC_NULL_RETURN);
+	sp_memcpy((*pstr), tkn->mem, tkn->len);
+	(*pstr)[tkn->len] = '\0';
+	return (SUP_SUCCESS);
 }
