@@ -6,13 +6,13 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:38:01 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 13:38:46 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/06 14:56:23 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	print_error2(char *error, char  *str)
+void	print_error2(char *error, char *str)
 {
 	write(2, "minishell: ", 11);
 	write(2, str, ft_strlen(str));

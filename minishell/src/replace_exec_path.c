@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 18:40:01 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 12:03:28 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/06 14:55:53 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ static char	*get_path_with_env(t_env *env, char *name)
 	return (res);
 }
 
-static int		get_command_ex(void *builtin_table, t_env *env, char *name, char **res)
+static int	get_command_ex(void *builtin_table, t_env *env,
+		char *name, char **res)
 {
 	char	*in_path;
 
@@ -48,7 +49,6 @@ int		replace_exec_path(char **value, t_env *env)
 	char	*repl;
 	int		found;
 
-	//printf(">>[%s]\n", env[0]);
 	if ((found = get_command_ex(NULL, env, *value, &repl)))
 	{
 		tmp = *value;

@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:33:46 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/04 14:11:10 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/06 14:44:26 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,11 @@ char		*pwd_function(void)
 
 int			pwd_biultin(char *const argv[], t_env *env)
 {
-	(void)argv, (void)env;
 	char	*path;
 
-	if((path = pwd_function()))
+	(void)argv;
+	(void)env;
+	if ((path = pwd_function()))
 	{
 		write(1, path, ft_strlen(path));
 		free(path);

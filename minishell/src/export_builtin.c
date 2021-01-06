@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:31:55 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/04 14:48:36 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/06 14:41:34 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int		check_identifier(char *str)
 	int	i;
 
 	i = 0;
-	while(str[i] && str[i] != '=')
+	while (str[i] && str[i] != '=')
 	{
 		if (!is_identifier_l(str[i], i))
 			return (0);
@@ -32,14 +32,14 @@ static int		check_identifier(char *str)
 	return (1);
 }
 
-static void			err_bad_assignment(char *str)
+static void		err_bad_assignment(char *str)
 {
 	write(2, "minishell: export: `", 20);
 	write(2, str, ft_strlen(str));
 	write(2, "': not a valid identifier\n", 26);
 }
 
-int				export_biultin(char *const argv[], t_env *env)
+int			export_biultin(char *const argv[], t_env *env)
 {
 	int		i;
 	int		ret;
@@ -50,7 +50,6 @@ int				export_biultin(char *const argv[], t_env *env)
 	last = 0;
 	while (ret && argv[++i])
 	{
-
 		if (!check_identifier(argv[i]))
 		{
 			err_bad_assignment(argv[i]);

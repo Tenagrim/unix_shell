@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 17:30:09 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/06 14:54:45 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,32 @@ static void	open_fds(t_super *progs, t_exec_args *a, int i)
 		close(a->pipes[!(a->cur_pipe)][0]);
 }
 
+static int		preparations(t_super *progs, t_exec_args *a,
+		t_env *env, int i)
+{
+	a->prog = progs->programs + i;
+	a->fds[0] = a->inp_fd;
+	a->fds[1] = 1;
+	a->inp_fd = 0;
+	a->exec_path = ft_strdup(a->prog->arguments[0]);
+	a->exec_func = get_exec_func(a->exec_path);
+	if (!(a->exec_func) && !(replace_exec_path(&(a->exec_path), env)))
+	{
+		print_error2("command not found", a->exec_path);
+		free(a->exec_path);
+		env->last_code = 127;
+		return (free_pipes(a->pipes, 1));
+	}
+	open_fds(progs, a, i);
+	if (a->fds[0] == -1)
+	{
+		print_error2("No such file or directory",
+				a->prog->redirect_filename[0]);
+		return (free_pipes(a->pipes, 1));
+	}
+	return (0);
+}
+
 int			exec_commands(t_super *progs, t_env *env)
 {
 	int			i;
@@ -68,26 +94,8 @@ int			exec_commands(t_super *progs, t_env *env)
 	a.inp_fd = 0;
 	while (i < progs->count)
 	{
-		a.prog = progs->programs + i;
-		a.fds[0] = a.inp_fd;
-		a.fds[1] = 1;
-		a.inp_fd = 0;
-		a.exec_path = ft_strdup(a.prog->arguments[0]);
-		a.exec_func = get_exec_func(a.exec_path);
-		if (!(a.exec_func) && !(replace_exec_path(&(a.exec_path), env)))
-		{
-			print_error2("command not found", a.exec_path);
-			free(a.exec_path);
-			env->last_code = 127;
-			return (free_pipes(a.pipes, 1));
-		}
-		open_fds(progs, &a, i);
-		if (a.fds[0] == -1)
-		{
-			print_error2("No such file or directory",
-					a.prog->redirect_filename[0]);
-			return (free_pipes(a.pipes, 1));
-		}
+		if (preparations(progs, &a, env, i))
+			return (1);
 		exec_redirected(&a, env);
 		if (a.exec_path)
 			free(a.exec_path);
