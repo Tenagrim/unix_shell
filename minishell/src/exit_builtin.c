@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:36:52 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/04 15:46:23 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/06 14:43:20 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int			is_right_digit(char *str1)
 {
 	int	ret;
 	char	*str;
-	char	*tmp;;
+	char	*tmp;
 
 	ret = 0;
 	str = ft_strtrim(str1, " \v\t\f\r\n");
@@ -42,14 +42,14 @@ int			exit_biultin(char *const argv[], t_env *env)
 	int	ex_code;
 
 	(void)argv;
-	//print_error("exit\n");
 	ex_code = 0;
 	if (argv[1])
 	{
 		if (!is_right_digit(argv[1]))
 		{
 			ex_code = 2;
-			print_error3("exit", argv[1], "numeric argument required");
+			print_error3("exit", argv[1],
+					"numeric argument required");
 		}
 		else
 			ex_code = ft_atoi(argv[1]);

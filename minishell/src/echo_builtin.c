@@ -6,7 +6,7 @@
 /*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:36:10 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/04 13:59:39 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/06 14:37:56 by tenagrim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,28 +30,23 @@ int	skip_flags(char *const argv[], char ***first_arg)
 					res = 1;
 		}
 		else
-			break;
+			break ;
 		i++;
 	}
 	*first_arg = argv + i;
 	return (res);
 }
 
-int			echo_biultin(char *const argv[], t_env *env)
+int	echo_biultin(char *const argv[], t_env *env)
 {
-	char	min_n;
+	char		min_n;
 	int		i;
 	char		**first_arg;
 	char		f;
+
+
 	(void)env;
-
-
 	min_n = skip_flags(argv, &first_arg);
-	//if (argv[1] && !ft_strcmp("-n", argv[1]))
-	//{
-	//	i++;
-	//	min_n = 1;
-	//}
 	i = 0;
 	f = 0;
 	while (first_arg[i])
