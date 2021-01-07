@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 21:32:31 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 12:41:54 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ int		should_postquit(t_super *super, t_env *env, int err, int ac)
 
 	should = 0;
 	if (tkz_check_flags(super->tkz, TKZ_FLAG_QUOTE_NL_END) ||
-		err == SUP_ERROR_INVALID_SYNTAX)
+		err == SUP_ERROR_INVALID_SYNTAX || err == SUP_ERROR_NO_ARGUMENTS ||
+		err == SUP_ERROR_MISSING_REDIRECTION_FILE)
 	{
 		env->last_code = 2;
 		if (ac == 3)
