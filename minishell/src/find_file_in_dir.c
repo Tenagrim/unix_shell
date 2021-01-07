@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_file_in_dir.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:29:28 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 19:10:33 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:38:10 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 int		find_file_in_dir(char *dir_name, char *file)
 {
 	DIR				*dir;
-	struct dirent			*opend_dir;
+	struct dirent	*opend_dir;
 
 	dir = opendir(dir_name);
 	if (!dir)

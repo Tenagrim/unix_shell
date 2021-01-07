@@ -6,14 +6,14 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/07 14:46:01 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:44:23 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 #include <exec_args.h>
 
-static int	**make_pipes(void)
+static int		**make_pipes(void)
 {
 	int	**res;
 
@@ -23,14 +23,14 @@ static int	**make_pipes(void)
 	return (res);
 }
 
-static void	free_pipes(int **pipes)
+static void		free_pipes(int **pipes)
 {
 	free(pipes[0]);
 	free(pipes[1]);
 	free(pipes);
 }
 
-static void	open_fds(t_super *progs, t_exec_args *a, int i)
+static void		open_fds(t_super *progs, t_exec_args *a, int i)
 {
 	a->cur_pipe = !(a->cur_pipe);
 	if (a->prog->flags & C_PIPE)
@@ -84,7 +84,7 @@ static int		preparations(t_super *progs, t_exec_args *a,
 	return (0);
 }
 
-int			exec_commands(t_super *progs, t_env *env)
+int				exec_commands(t_super *progs, t_env *env)
 {
 	int			i;
 	t_exec_args	a;

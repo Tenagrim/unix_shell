@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:36:52 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/07 13:41:10 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:37:04 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int			is_right_digit(char *str1)
 {
-	int	ret;
+	int		ret;
 	char	*str;
 	char	*tmp;
 
@@ -39,9 +39,9 @@ int			is_right_digit(char *str1)
 
 int			ft_atoi_bust(char *str)
 {
-	int	min;
+	int		min;
 	char	*tmp;
-	int	res;
+	int		res;
 
 	tmp = ft_strtrim(str, " \v\t\f\r\n");
 	str = tmp;
@@ -58,7 +58,7 @@ int			ft_atoi_bust(char *str)
 
 int			exit_biultin(char *const argv[], t_env *env)
 {
-	int	ex_code;
+	int		ex_code;
 	char	*str;
 
 	ex_code = 0;

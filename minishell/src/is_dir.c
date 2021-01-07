@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   is_dir.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/29 19:23:09 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 19:18:27 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:37:14 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 int	is_dir(char *name)
 {
 	struct stat	buff;
-	int		ret;
+	int			ret;
 
 	ret = stat(name, &buff);
 	return ((!ret) ? (int)(buff.st_mode & S_IFDIR) : -1);

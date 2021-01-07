@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirected.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 14:53:04 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 19:09:51 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:42:23 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 #include <exec_args.h>
-#include<sys/wait.h>
+#include <sys/wait.h>
 
 static void	close_fds(int *fds)
 {

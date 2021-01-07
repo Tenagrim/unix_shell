@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:36:10 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 19:07:22 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:37:44 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,9 @@ int	skip_flags(char *const argv[], char ***first_arg)
 int	echo_biultin(char *const argv[], t_env *env)
 {
 	char		min_n;
-	int		i;
+	int			i;
 	char		**first_arg;
 	char		f;
-
 
 	(void)env;
 	min_n = skip_flags(argv, &first_arg);

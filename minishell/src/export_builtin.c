@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:31:55 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/07 16:37:15 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:42:01 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void		err_bad_assignment(char *str)
 	write(2, "': not a valid identifier\n", 26);
 }
 
-int			export_biultin(char *const argv[], t_env *env)
+int				export_biultin(char *const argv[], t_env *env)
 {
 	int		i;
 	int		ret;

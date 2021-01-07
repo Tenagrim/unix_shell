@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 13:18:33 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 19:12:53 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:44:58 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*get_full_path(char *dir_name, char *name)
 	return (res);
 }
 
-char	*find_path(char *path, char *name)
+char		*find_path(char *path, char *name)
 {
 	char	*dir_name;
 	char	*sep;

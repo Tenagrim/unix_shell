@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/29 14:18:23 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 14:38:27 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:41:41 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	signal_handler(int sig)
 {
 	if (sig == 2)
 	{
-		write(2, "\n" ,1);
+		write(2, "\n", 1);
 		write_prompt();
 	}
 	else if (sig == 3)

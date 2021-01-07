@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/07 13:33:43 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:43:36 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,8 @@ int		main_loop(t_super *super, t_env *env)
 			write(2, "\n", 1);
 		if (is_super_error(error))
 			print_error1((char*)(super_error_str(error)));
-		else
-			if (exec_commands(super, env))
-				break ;
+		else if (exec_commands(super, env))
+			break ;
 		if (should_postquit(super, env, error))
 			break ;
 	}
