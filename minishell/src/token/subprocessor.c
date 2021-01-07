@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 12:49:28 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 13:33:34 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 12:38:12 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,12 @@ int		tkz_subprocessor_env(t_tkz *tkz, t_tkz_buf *buf)
 	if (!tkz_is_error(error))
 		error = tkz_write_buffer_str(&nbuf, buf->mem + buf->start, buf->len);
 	if (tkz_is_error(error))
-	{
 		tkz_free_buf(&nbuf);
+	if (tkz_is_error(error))
 		return (error);
-	}
 	tkz_free_buf(buf);
 	*buf = nbuf;
+	tkz_free_token(&name);
 	return (error);
 }
 
