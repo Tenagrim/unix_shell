@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:36:52 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/07 13:39:22 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 13:41:10 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int			exit_biultin(char *const argv[], t_env *env)
 		if (!is_right_digit(str))
 		{
 			ex_code = 2;
-			env->should_terminate = 0;
 			print_error3("exit", str,
 					"numeric argument required");
 		}
