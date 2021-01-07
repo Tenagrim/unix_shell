@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 12:46:01 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 17:00:11 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:22:07 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ int		tkz_buffer_expand(t_tkz_buf *buf, int at_least)
 
 	new_cap = buf->cap * 2;
 	if (new_cap < at_least)
-		new_cap = (at_least + 63) & -64;
+		new_cap = at_least;
 	if (new_cap <= 0)
 		new_cap = 16;
 	new_mem = malloc(new_cap);
 	if (new_mem)
 	{
-		if (buf->mem && buf->len > 0)
+		if (buf->mem)
 		{
 			tkz_memcpy(new_mem, buf->mem + buf->start, buf->len);
 			free(buf->mem);
@@ -45,7 +45,7 @@ int		tkz_write_buffer_str(t_tkz_buf *buf, const char *str, int len)
 
 	error = TKZ_SUCCESS;
 	if (buf->start + buf->len + len > buf->cap)
-		error = tkz_buffer_expand(buf, buf->start + buf->len + len);
+		error = tkz_buffer_expand(buf, buf->len + len);
 	if (!tkz_is_error(error))
 	{
 		tkz_memcpy(buf->mem + buf->start + buf->len, (void *)str, len);
@@ -86,7 +86,7 @@ int		tkz_read_buffer(t_tkz_buf *buf)
 		tkz_memcpy(buf->mem, buf->mem + buf->start, buf->len);
 	buf->start = 0;
 	error = TKZ_SUCCESS;
-	if (buf->len < buf->cap && buf->fd >= 0)
+	if (buf->fd >= 0)
 	{
 		while (!tkz_is_error(error) && !tkz_is_buffer_closed(buf))
 		{
