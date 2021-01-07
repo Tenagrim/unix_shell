@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/07 13:44:01 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 14:26:50 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int			exec_commands(t_super *progs, t_env *env)
 	a.cur_pipe = 0;
 	i = 0;
 	a.inp_fd = 0;
+	env->should_terminate = 0;
 	while (i < progs->count)
 	{
 		if (preparations(progs, &a, env, i))
