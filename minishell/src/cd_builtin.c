@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:35:21 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 20:06:15 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/07 12:33:50 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int			cd_biultin(char *const argv[], t_env *env)
 	path = argv[1];
 	if (!argv[1])
 	{
-		if (!find_env_variable_cb(env, "HOME", &home))
+		if (!find_env_variable_cb_static(env, "HOME", &home))
 			return (return_err());
 		path = home;
 	}
