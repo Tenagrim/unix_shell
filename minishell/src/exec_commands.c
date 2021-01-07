@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 14:54:45 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 13:33:14 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,11 @@ static int	**make_pipes(void)
 	return (res);
 }
 
-static int	free_pipes(int **pipes, int ret)
+static void	free_pipes(int **pipes)
 {
 	free(pipes[0]);
 	free(pipes[1]);
 	free(pipes);
-	return (ret);
 }
 
 static void	open_fds(t_super *progs, t_exec_args *a, int i)
@@ -71,14 +70,16 @@ static int		preparations(t_super *progs, t_exec_args *a,
 		print_error2("command not found", a->exec_path);
 		free(a->exec_path);
 		env->last_code = 127;
-		return (free_pipes(a->pipes, 1));
+		return (1);
 	}
 	open_fds(progs, a, i);
 	if (a->fds[0] == -1)
 	{
 		print_error2("No such file or directory",
 				a->prog->redirect_filename[0]);
-		return (free_pipes(a->pipes, 1));
+		free(a->exec_path);
+		env->last_code = 1;
+		return (1);
 	}
 	return (0);
 }
@@ -87,6 +88,7 @@ int			exec_commands(t_super *progs, t_env *env)
 {
 	int			i;
 	t_exec_args	a;
+	int			ret;
 
 	a.pipes = make_pipes();
 	a.cur_pipe = 0;
@@ -95,11 +97,14 @@ int			exec_commands(t_super *progs, t_env *env)
 	while (i < progs->count)
 	{
 		if (preparations(progs, &a, env, i))
-			return (1);
+			break ;
 		exec_redirected(&a, env);
 		if (a.exec_path)
 			free(a.exec_path);
+		if (env->should_terminate)
+			break ;
 		i++;
 	}
-	return (free_pipes(a.pipes, 0));
+	free_pipes(a.pipes);
+	return (env->should_terminate);
 }

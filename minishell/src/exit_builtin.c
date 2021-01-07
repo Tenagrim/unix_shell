@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 13:36:52 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 20:07:49 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 13:39:22 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,18 +62,19 @@ int			exit_biultin(char *const argv[], t_env *env)
 	char	*str;
 
 	ex_code = 0;
+	env->should_terminate = 1;
 	if (argv[1])
 	{
 		str = argv[1];
 		if (!is_right_digit(str))
 		{
 			ex_code = 2;
+			env->should_terminate = 0;
 			print_error3("exit", str,
 					"numeric argument required");
 		}
 		else
 			ex_code = ft_atoi_bust(str);
 	}
-	free_env(&env);
-	exit(ex_code);
+	return (ex_code);
 }

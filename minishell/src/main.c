@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/07 12:50:58 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 13:33:43 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int		should_postquit(t_super *super, t_env *env, int err)
 	return (should);
 }
 
-void	main_loop(t_super *super, t_env *env)
+int		main_loop(t_super *super, t_env *env)
 {
 	int		error;
 
@@ -65,16 +65,19 @@ void	main_loop(t_super *super, t_env *env)
 		if (is_super_error(error))
 			print_error1((char*)(super_error_str(error)));
 		else
-			exec_commands(super, env);
+			if (exec_commands(super, env))
+				break ;
 		if (should_postquit(super, env, error))
 			break ;
 	}
+	return (env->last_code);
 }
 
 int		main(int ac, char **av, char **env)
 {
 	t_super		*super;
 	t_env		*env_t;
+	int			last_code;
 
 	(void)ac;
 	(void)av;
@@ -85,8 +88,9 @@ int		main(int ac, char **av, char **env)
 	super->tkz->env_get = (t_tkz_env_get)find_env_variable_cb_static;
 	super->tkz->last_exit_code = (t_tkz_last_exit_code)get_last_code;
 	super->tkz->data = env_t;
-	main_loop(super, env_t);
+	last_code = main_loop(super, env_t);
 	write(2, "exit\n", 5);
 	free_super(&super);
 	free_env(&env_t);
+	return (last_code);
 }

@@ -15,6 +15,7 @@ typedef struct	s_environment {
 	int				var_cap;
 	int				var_count;
 	unsigned char	last_code;
+	int				should_terminate;
 	t_var			*var;
 
 }				t_env;
