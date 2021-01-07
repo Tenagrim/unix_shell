@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:51:46 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/07 14:26:50 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 14:46:01 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ int			exec_commands(t_super *progs, t_env *env)
 {
 	int			i;
 	t_exec_args	a;
-	int			ret;
 
 	a.pipes = make_pipes();
 	a.cur_pipe = 0;
