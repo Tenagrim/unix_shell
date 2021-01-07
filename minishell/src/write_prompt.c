@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/29 14:22:36 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 14:46:29 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 14:51:24 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	write_prompt(void)
 	char	*prompt_2;
 
 	(void)prompt;
-	prompt_2 = "minishell:";
+	prompt_2 = "minishell";
 	write(2, prompt_2, ft_strlen(prompt_2));
-	write(2, " $: ", 3);
+	write(2, "$ ", 2);
 }
