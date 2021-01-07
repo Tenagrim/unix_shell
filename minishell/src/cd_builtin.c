@@ -14,10 +14,7 @@
 
 static int	replace_or_create_env_variable(t_env *env, char *key, char *value)
 {
-	if (find_env_variable(env, key) == -1)
-		add_env_variable(env, key, ft_strdup(value));
-	else
-		replace_env_variable(env, key, ft_strdup(value));
+	add_env_variable(env, key, value);
 	return (0);
 }
 

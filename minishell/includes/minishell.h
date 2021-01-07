@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:31:24 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/06 19:11:58 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 18:05:52 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <env.h>
 # include <exec_args.h>
 
-#include <stdio.h>
+typedef int		(*t_execf)(char *const argv[], t_env *env);
 
 /*
 ** get_env_value
@@ -47,7 +47,6 @@ int		find_file_in_dir(char *dir_name, char *file);
 */
 char	*find_path(char *path, char *name);
 int		exec_redirected(t_exec_args *a, t_env *env);
-//int		exec_redirected(int (*exec_func)(char *const argv[], t_env *env),char *exec_path, char **av, int *fds, t_env *env);
 int		exec_commands(t_super *progs, t_env *env);
 int		exec_command(char **av, char **env);
 char	**copy_env(char **env);
@@ -69,9 +68,9 @@ int		cd_biultin(char *const argv[], t_env *env);
 int		echo_biultin(char *const argv[], t_env *env);
 int		exit_biultin(char *const argv[], t_env *env);
 void	print_error1(char *error);
-void	print_error2(char *error, char  *str);
-void	print_error3(char  *str1, char *str2, char *error);
-int		(*get_exec_func(char *name))(char *const argv[], t_env *env);
+void	print_error2(char *error, char *str);
+void	print_error3(char *str1, char *str2, char *error);
+t_execf	get_exec_func(char *name);
 int		inc_shlvl(t_env *env);
 char	*pwd_function(void);
 int		find_file_in_dir(char *dir_name, char *file);

@@ -70,7 +70,6 @@ print_error1.c\
 print_error2.c\
 print_error3.c\
 pwd_builtin.c\
-replace_env_variable.c\
 replace_exec_path.c\
 signal_handler.c\
 unset_builtin.c\

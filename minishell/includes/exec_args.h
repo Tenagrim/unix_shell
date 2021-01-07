@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_args.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 16:49:03 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/03 16:50:24 by gshona           ###   ########.fr       */
+/*   Updated: 2021/01/07 17:46:56 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define EXEC_ARGS_H
 # include <env.h>
 
-typedef struct s_exec_args
+typedef struct	s_exec_args
 {
 	int			**pipes;
 	int			cur_pipe;
@@ -24,4 +24,5 @@ typedef struct s_exec_args
 	char		*exec_path;
 	int			(*exec_func)(char *const argv[], t_env *env);
 }				t_exec_args;
+
 #endif

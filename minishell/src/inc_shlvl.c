@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inc_shlvl.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gshona <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 19:11:07 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/04 14:03:16 by tenagrim         ###   ########.fr       */
+/*   Updated: 2021/01/07 17:55:09 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@ int	inc_shlvl(t_env *env)
 
 	if (!find_env_variable_cb_static(env, "SHLVL", &tmp))
 	{
-		add_env_variable(env, "SHLVL", ft_strdup("1"));
+		add_env_variable(env, "SHLVL", "1");
 		return (1);
 	}
 	shlvl = ft_atoi(tmp) + 1;
 	tmp = ft_itoa(shlvl);
-	replace_env_variable(env, "SHLVL", tmp);
+	add_env_variable(env, "SHLVL", tmp);
+	free(tmp);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 12:11:05 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/06 17:23:05 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 18:01:15 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ typedef struct	s_token
 	char	*mem;
 }				t_token;
 
-typedef struct s_tokenizer_buffer
+typedef struct	s_tokenizer_buffer
 {
 	int			fd;
 	int			start;
@@ -39,14 +39,14 @@ typedef int		(*t_tkz_last_exit_code)(void *data, int *exit_code);
 
 typedef struct	s_tokenizer
 {
-	int			tkn_cap;
-	int			tkn_count;
-	t_token		*tkn;
+	int						tkn_cap;
+	int						tkn_count;
+	t_token					*tkn;
 
-	unsigned	state;
-	int			flags;
+	unsigned				state;
+	int						flags;
 
-	t_tkz_buf	buf;
+	t_tkz_buf				buf;
 
 	void					*data;
 	t_tkz_env_get			env_get;

@@ -6,7 +6,7 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/27 15:40:09 by jsandsla          #+#    #+#             */
-/*   Updated: 2021/01/07 12:41:31 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/07 18:00:12 by jsandsla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "token.h"
 
-typedef struct	t_program
+typedef struct	s_program
 {
 	int			arg_cap;
 	int			arg_count;
@@ -63,13 +63,13 @@ typedef struct	s_super
 # define SUP_REDIRECTION_OUT_APPEND_FLAG (1 << 2)
 # define SUP_REDIRECTION_PIPE_FLAG (1 << 3)
 
-t_super		*init_super(void);
-void		free_super(t_super **psuper);
-int			make_super(t_super *super);
+t_super			*init_super(void);
+void			free_super(t_super **psuper);
+int				make_super(t_super *super);
 
-int			is_super_error(int error);
-const char	*super_error_str(int error);
+int				is_super_error(int error);
+const char		*super_error_str(int error);
 
-void		print_super(t_super *super);
+void			print_super(t_super *super);
 
 #endif
