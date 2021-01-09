@@ -6,16 +6,11 @@
 /*   By: jsandsla <jsandsla@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 11:22:18 by gshona            #+#    #+#             */
-/*   Updated: 2021/01/07 17:43:36 by jsandsla         ###   ########.fr       */
+/*   Updated: 2021/01/09 14:54:55 by gshona           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#include <printf.h> //FIXME
 
 t_env	*make_env(char **env_n)
 {
@@ -55,9 +50,6 @@ int		main_loop(t_super *super, t_env *env)
 		if (!tkz_is_command_buffered(super->tkz))
 			write_prompt();
 		error = make_super(super);
-		// print_super(super);
-		// tkz_print(super->tkz);
-		// printf ("error: %d\n", error);
 		if (should_prequit(error))
 			break ;
 		if (tkz_check_flags(super->tkz, TKZ_FLAG_UNEXPECTED_EOF))
